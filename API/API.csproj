@@ -21,6 +21,7 @@
     <Folder Include="Data/" />
     <Folder Include="DTOs/" />
     <Folder Include="Helpers/" />
+    <Folder Include="Interface/" />
     <Folder Include="Services/" />
   </ItemGroup>
 
