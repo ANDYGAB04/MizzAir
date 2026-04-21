@@ -32,6 +32,12 @@ public static class IdentityServiceExtensions
                     ValidateAudience = false
                 };
             });
+
+        services.AddAuthorizationBuilder()
+           .AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"))
+           .AddPolicy("StaffRole", policy => policy.RequireRole("Admin", "Staff"));
+
+
         return services;
 
     }

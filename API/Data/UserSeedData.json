@@ -1,0 +1,37 @@
+[
+    {
+        "username": "john_doe",
+        "email": "john@example.com",
+        "firstName": "John",
+        "lastName": "Doe",
+        "address": "123 Main Street, New York, NY 10001"
+    },
+    {
+        "username": "jane_smith",
+        "email": "jane@example.com",
+        "firstName": "Jane",
+        "lastName": "Smith",
+        "address": "456 Oak Avenue, Los Angeles, CA 90001"
+    },
+    {
+        "username": "michael_johnson",
+        "email": "michael@example.com",
+        "firstName": "Michael",
+        "lastName": "Johnson",
+        "address": "789 Pine Road, Chicago, IL 60601"
+    },
+    {
+        "username": "sarah_williams",
+        "email": "sarah@example.com",
+        "firstName": "Sarah",
+        "lastName": "Williams",
+        "address": "321 Elm Street, Houston, TX 77001"
+    },
+    {
+        "username": "robert_brown",
+        "email": "robert@example.com",
+        "firstName": "Robert",
+        "lastName": "Brown",
+        "address": "654 Maple Drive, Phoenix, AZ 85001"
+    }
+]
