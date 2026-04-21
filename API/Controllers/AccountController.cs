@@ -17,12 +17,18 @@ public class AccountController(UserManager<User> userManager, ITokenService toke
     {
         if (await EmailExist(registerDto.Email))
         {
-            return BadRequest("Username is taken");
+            return BadRequest("Email is taken");
         }
 
         var user = mapper.Map<User>(registerDto);
 
         user.Email = registerDto.Email.ToLower();
+
+        if (registerDto.FirstName is null)
+        {
+            return BadRequest("FirstName is not set");
+        }
+        user.UserName = registerDto.FirstName.ToLower();
 
         var result = await userManager.CreateAsync(user, registerDto.Password);
 
@@ -36,7 +42,8 @@ public class AccountController(UserManager<User> userManager, ITokenService toke
             Lastname = user.LastName,
             Token = await tokenService.CreateToken(user),
             FirstName = user.FirstName,
-            Email = user.Email
+            Email = user.Email,
+            Address = user.Address
         };
     }
 
@@ -52,7 +59,8 @@ public class AccountController(UserManager<User> userManager, ITokenService toke
             Lastname = user.LastName,
             Token = await tokenService.CreateToken(user),
             FirstName = user.FirstName,
-            Email = user.Email
+            Email = user.Email,
+            Address = user.Address
         };
     }
 
