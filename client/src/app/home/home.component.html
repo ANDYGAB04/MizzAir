@@ -1,0 +1,41 @@
+<div class="home-container">
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Welcome to MizzAir</h1>
+            <p>Book your flights and explore the world with us</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary" routerLink="/flights">
+                    Search Flights
+                </button>
+                <button class="btn btn-secondary" routerLink="/login">
+                    Sign In
+                </button>
+            </div>
+        </div>
+        <div class="hero-image">
+            ✈️
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <h2>Why Choose MizzAir?</h2>
+        <div class="features-grid">
+            <div *ngFor="let feature of features" class="feature-card">
+                <div class="feature-icon">{{ feature.icon }}</div>
+                <h3>{{ feature.title }}</h3>
+                <p>{{ feature.description }}</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <h2>Ready to Travel?</h2>
+        <p>Start booking your next adventure today</p>
+        <button class="btn btn-primary" routerLink="/flights">
+            Browse Flights Now
+        </button>
+    </section>
+</div>
