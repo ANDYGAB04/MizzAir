@@ -44,5 +44,18 @@ public class DataContext(DbContextOptions options) : IdentityDbContext<User, App
         builder.Entity<Booking>().Property(b => b.TotalPrice).HasPrecision(10, 2);
         builder.Entity<BaggageType>().Property(b => b.Price).HasPrecision(10, 2);
         builder.Entity<BaggageType>().Property(b => b.MaxWeight).HasPrecision(5, 2);
+
+        // Configure Flight-Airport relationships
+        builder.Entity<Flight>()
+            .HasOne(f => f.DepartureAirport)
+            .WithMany(a => a.DepartureFlights)
+            .HasForeignKey(f => f.DepartureAirportId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Flight>()
+            .HasOne(f => f.ArrivalAirport)
+            .WithMany(a => a.ArrivalFlights)
+            .HasForeignKey(f => f.ArrivalAirportId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }
