@@ -2,14 +2,20 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-content">
-            <h1>Welcome to MizzAir</h1>
-            <p>Book your flights and explore the world with us</p>
+            <h1 *ngIf="!authService.currentUser()">Welcome to MizzAir</h1>
+            <h1 *ngIf="authService.currentUser()">Welcome back, {{ authService.currentUser()?.email }}!</h1>
+            <p *ngIf="!authService.currentUser()">Book your flights and explore the world with us</p>
+            <p *ngIf="authService.currentUser()">Ready for your next adventure? Browse and book your flights now</p>
             <div class="hero-buttons">
                 <button class="btn btn-primary" routerLink="/flights">
-                    Search Flights
+                    <span *ngIf="!authService.currentUser()">Search Flights</span>
+                    <span *ngIf="authService.currentUser()">Book a Flight</span>
                 </button>
-                <button class="btn btn-secondary" routerLink="/login">
+                <button class="btn btn-secondary" routerLink="/login" *ngIf="!authService.currentUser()">
                     Sign In
+                </button>
+                <button class="btn btn-secondary" routerLink="/bookings" *ngIf="authService.currentUser()">
+                    My Bookings
                 </button>
             </div>
         </div>
@@ -32,10 +38,13 @@
 
     <!-- CTA Section -->
     <section class="cta">
-        <h2>Ready to Travel?</h2>
-        <p>Start booking your next adventure today</p>
+        <h2 *ngIf="!authService.currentUser()">Ready to Travel?</h2>
+        <h2 *ngIf="authService.currentUser()">Find Your Next Destination</h2>
+        <p *ngIf="!authService.currentUser()">Start booking your next adventure today</p>
+        <p *ngIf="authService.currentUser()">Explore millions of flights and find the best deals</p>
         <button class="btn btn-primary" routerLink="/flights">
-            Browse Flights Now
+            <span *ngIf="!authService.currentUser()">Browse Flights Now</span>
+            <span *ngIf="authService.currentUser()">Search Flights</span>
         </button>
     </section>
 </div>

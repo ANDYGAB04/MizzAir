@@ -108,6 +108,29 @@
     transform: rotate(-45deg) translate(7px, -7px);
 }
 
+.user-section {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-shrink: 0;
+}
+
+.user-email {
+    color: white;
+    font-size: 0.95rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.logout-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid white;
+}
+
+.logout-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
 @media (max-width: 768px) {
     .nav-container {
         padding: 0 1rem;
@@ -164,5 +187,17 @@
         margin: 0;
         padding: 0.6rem 1.5rem;
         border-radius: 4px;
+    }
+
+    .user-section {
+        position: absolute;
+        right: 70px;
+        top: 50%;
+        transform: translateY(-50%);
+        gap: 0.5rem;
+    }
+
+    .user-email {
+        display: none;
     }
 }

@@ -10,7 +10,12 @@ import { User } from '../../models/user';
 export class AuthService {
   private http = inject(HttpClient);
   baseUrl = environment.apiUrl;
-  currentUser = signal<User | null>(null);
+  currentUser = signal<User | null>(this.getUserFromStorage());
+
+  private getUserFromStorage(): User | null {
+    const storedUser = localStorage.getItem('user');
+    return storedUser ? JSON.parse(storedUser) : null;
+  }
 
   login(model: any) {
     return this.http.post<User>(this.baseUrl + 'account/login', model).pipe(
