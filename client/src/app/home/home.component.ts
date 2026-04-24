@@ -12,7 +12,7 @@ import { AuthService } from '../services/auth.service';
 })
 export class HomeComponent {
     authService = inject(AuthService);
-    
+
     features = [
         {
             icon: '✈️',

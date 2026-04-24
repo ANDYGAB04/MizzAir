@@ -18,7 +18,7 @@
         </div>
 
         <!-- Show Login button when not logged in -->
-        <a routerLink="/login" routerLinkActive="active" class="nav-link nav-link-btn" (click)="closeMenu()" 
+        <a routerLink="/login" routerLinkActive="active" class="nav-link nav-link-btn" (click)="closeMenu()"
             *ngIf="!authService.currentUser()">
             Login
         </a>
