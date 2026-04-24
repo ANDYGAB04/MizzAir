@@ -15,9 +15,10 @@ public static class ApplicationServiceExtensions
         {
             opt.UseSqlite(config.GetConnectionString("DefaultConnection"));
         });
-        services.AddScoped<ITokenService, TokenService>();  
+        services.AddScoped<ITokenService, TokenService>();
         services.AddCors();
-        services.AddAutoMapper(config => {}, typeof(Program).Assembly);
+        services.AddAutoMapper(config => { }, typeof(Program).Assembly);
+        services.AddScoped<IFlightService, FlightService>();
 
         return services;
     }
