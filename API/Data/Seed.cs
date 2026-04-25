@@ -46,6 +46,7 @@ public class Seed
         {
             FirstName = "admin",
             LastName = "admin",
+            Email = "admin@gmail.com",
             Address = ""
         };
 
