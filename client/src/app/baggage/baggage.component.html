@@ -1,0 +1,70 @@
+<div class="baggage-container">
+  <!-- Booking Progress Stepper -->
+  <app-flight-stepper [activeStep]="currentStep()"></app-flight-stepper>
+
+  <!-- Header Section -->
+  <div class="baggage-header">
+    <h1>Select Your Baggage</h1>
+  </div>
+
+  <!-- Loading/Error States -->
+  <div *ngIf="baggageService.isLoading()" class="loading-message">
+    Loading baggage options...
+  </div>
+
+  <div *ngIf="baggageService.error()" class="error-message">
+    {{ baggageService.error() }}
+  </div>
+
+  // Commented out route info for now, can be added back in later when we have dynamic data
+  <!-- Baggage Selection Section -->
+  <!-- <div *ngIf="!baggageService.isLoading()" class="selection-section">
+    // Route info
+    <div class="route-info">
+      <div class="route-item">Origin City</div>
+      <div class="arrow">→</div>
+      <div class="route-item">Destination City</div>
+    </div> -->
+
+    <!-- Cabin Baggage Section -->
+    <div class="baggage-category">
+      <h2>Cabin Baggage</h2>
+      <p class="category-subtitle">Included in your booking</p>
+
+      <div class="baggage-grid">
+        <app-baggage-card
+          *ngFor="let baggage of cabinBaggages()"
+          [baggage]="baggage"
+          [isSelected]="isCabinBaggageSelected(baggage.id)"
+          [category]="'cabin'"
+          (selected)="onCabinBaggageSelect(baggage)">
+        </app-baggage-card>
+      </div>
+    </div>
+
+    <!-- Checked Baggage Section -->
+    <div class="baggage-category">
+      <h2>Checked Baggage</h2>
+      <p class="category-subtitle">Optional - additional fee applies</p>
+
+      <div class="baggage-grid">
+        <app-baggage-card
+          *ngFor="let baggage of checkedBaggages()"
+          [baggage]="baggage"
+          [isSelected]="isCheckedBaggageSelected(baggage.id)"
+          [category]="'checked'"
+          (selected)="onCheckedBaggageSelect(baggage)">
+        </app-baggage-card>
+      </div>
+    </div>
+
+    <!-- Summary and Continue Button -->
+    <div class="action-section">
+      <div class="price-summary">
+        <span class="summary-label">Total Baggage Price:</span>
+        <span class="summary-price">€{{ totalPrice() }}</span>
+      </div>
+      <button class="continue-btn" (click)="continue()">Continue</button>
+    </div>
+  </div>
+</div>
