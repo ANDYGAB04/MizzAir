@@ -19,6 +19,7 @@ public static class ApplicationServiceExtensions
         services.AddCors();
         services.AddAutoMapper(config => { }, typeof(Program).Assembly);
         services.AddScoped<IFlightService, FlightService>();
+        services.AddScoped<IBaggageService, BaggageService>();
 
         return services;
     }
