@@ -26,45 +26,38 @@
       <div class="route-item">Destination City</div>
     </div> -->
 
-    <!-- Cabin Baggage Section -->
-    <div class="baggage-category">
-      <h2>Cabin Baggage</h2>
-      <p class="category-subtitle">Included in your booking</p>
+  <!-- Cabin Baggage Section -->
+  <div class="baggage-category">
+    <h2>Cabin Baggage</h2>
+    <p class="category-subtitle">Included in your booking</p>
 
-      <div class="baggage-grid">
-        <app-baggage-card
-          *ngFor="let baggage of cabinBaggages()"
-          [baggage]="baggage"
-          [isSelected]="isCabinBaggageSelected(baggage.id)"
-          [category]="'cabin'"
-          (selected)="onCabinBaggageSelect(baggage)">
-        </app-baggage-card>
-      </div>
+    <div class="baggage-grid">
+      <app-baggage-card *ngFor="let baggage of cabinBaggages()" [baggage]="baggage"
+        [isSelected]="isCabinBaggageSelected(baggage.id)" [category]="'cabin'"
+        (selected)="onCabinBaggageSelect(baggage)">
+      </app-baggage-card>
     </div>
+  </div>
 
-    <!-- Checked Baggage Section -->
-    <div class="baggage-category">
-      <h2>Checked Baggage</h2>
-      <p class="category-subtitle">Optional - additional fee applies</p>
+  <!-- Checked Baggage Section -->
+  <div class="baggage-category">
+    <h2>Checked Baggage</h2>
+    <p class="category-subtitle">Optional - additional fee applies</p>
 
-      <div class="baggage-grid">
-        <app-baggage-card
-          *ngFor="let baggage of checkedBaggages()"
-          [baggage]="baggage"
-          [isSelected]="isCheckedBaggageSelected(baggage.id)"
-          [category]="'checked'"
-          (selected)="onCheckedBaggageSelect(baggage)">
-        </app-baggage-card>
-      </div>
+    <div class="baggage-grid">
+      <app-baggage-card *ngFor="let baggage of checkedBaggages()" [baggage]="baggage"
+        [isSelected]="isCheckedBaggageSelected(baggage.id)" [category]="'checked'"
+        (selected)="onCheckedBaggageSelect(baggage)">
+      </app-baggage-card>
     </div>
+  </div>
 
-    <!-- Summary and Continue Button -->
-    <div class="action-section">
-      <div class="price-summary">
-        <span class="summary-label">Total Baggage Price:</span>
-        <span class="summary-price">€{{ totalPrice() }}</span>
-      </div>
-      <button class="continue-btn" (click)="continue()">Continue</button>
+  <!-- Summary and Continue Button -->
+  <div class="action-section">
+    <div class="price-summary">
+      <span class="summary-label">Total Baggage Price:</span>
+      <span class="summary-price">€{{ totalPrice() }}</span>
     </div>
+    <button class="continue-btn" (click)="continue()">Continue</button>
   </div>
 </div>
