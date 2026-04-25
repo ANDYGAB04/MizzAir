@@ -1,0 +1,27 @@
+<div class="baggage-card" [class.selected]="isSelected()" (click)="onSelect()">
+  <div class="card-header">
+    <h3 class="baggage-type">{{ baggage().type }}</h3>
+    <div *ngIf="isSelected()" class="checkmark">✓</div>
+  </div>
+
+  <div class="card-details">
+    <div class="detail-item">
+      <span class="label">Max Dimensions:</span>
+      <span class="value">{{ baggage().maxDimensions }}</span>
+    </div>
+
+    <div class="detail-item">
+      <span class="label">Max Weight:</span>
+      <span class="value">{{ baggage().maxWeight }} kg</span>
+    </div>
+
+    <div class="detail-item price">
+      <span class="label">Price:</span>
+      <span class="value">€{{ baggage().price }}</span>
+    </div>
+  </div>
+
+  <button class="select-btn" [class.selected-btn]="isSelected()">
+    {{ isSelected() ? 'Selected' : 'Select' }}
+  </button>
+</div>
