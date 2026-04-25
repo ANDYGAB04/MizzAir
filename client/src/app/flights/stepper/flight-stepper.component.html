@@ -1,0 +1,11 @@
+<div class="stepper-container">
+  <div class="steps-wrapper">
+    <div *ngFor="let step of steps(); let last = last" class="step-item-wrapper">
+      <div class="step-item" [class.active]="isStepActive(step.id)">
+        <div class="step-label">{{ step.label }}</div>
+      </div>
+
+      <div *ngIf="!last" class="step-arrow">→</div>
+    </div>
+  </div>
+</div>

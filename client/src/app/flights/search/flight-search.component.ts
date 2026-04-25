@@ -2,17 +2,21 @@ import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FlightService } from '../../services/flight.service';
+import { FlightStepperComponent } from '../stepper/flight-stepper.component';
 import { SearchFlightRequest } from '../../../models/flight';
 
 @Component({
   selector: 'app-flight-search',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, FlightStepperComponent],
   templateUrl: './flight-search.component.html',
   styleUrl: './flight-search.component.css'
 })
 export class FlightSearchComponent {
   flightService = inject(FlightService);
+
+  // Current step
+  currentStep = signal<string>('flights');
 
   // Form state signals
   originAirportId = signal<number | string>('');
