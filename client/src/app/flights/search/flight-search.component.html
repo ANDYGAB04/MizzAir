@@ -15,7 +15,7 @@
           <label for="origin">Origin City</label>
           <select 
             id="origin" 
-            [(ngModel)]="originAirportId"
+            [ngModel]="originAirportId()" (ngModelChange)="originAirportId.set($event)"
             class="form-control">
             <option value="" disabled>Select origin</option>
             <option *ngFor="let airport of flightService.airports()" [value]="airport.id">
@@ -30,7 +30,7 @@
           <label for="destination">Destination city</label>
           <select 
             id="destination" 
-            [(ngModel)]="destinationAirportId"
+            [ngModel]="destinationAirportId()" (ngModelChange)="destinationAirportId.set($event)"
             class="form-control">
             <option value="" disabled>Select destination</option>
             <option *ngFor="let airport of flightService.airports()" [value]="airport.id">
@@ -46,7 +46,7 @@
           <input 
             type="date" 
             id="date" 
-            [(ngModel)]="departureDate"
+            [ngModel]="departureDate()" (ngModelChange)="departureDate.set($event)"
             class="form-control">
         </div>
 
@@ -57,7 +57,7 @@
             id="passengers" 
             min="1" 
             max="9" 
-            [(ngModel)]="numberOfPassengers"
+            [ngModel]="numberOfPassengers()" (ngModelChange)="numberOfPassengers.set($event)"
             class="form-control">
         </div>
 
@@ -65,7 +65,7 @@
           <label for="sort">Sort By</label>
           <select 
             id="sort" 
-            [(ngModel)]="sortBy"
+            [ngModel]="sortBy()" (ngModelChange)="sortBy.set($event)"
             class="form-control">
             <option value="">Default (Price)</option>
             <option value="price">Price (Low to High)</option>
