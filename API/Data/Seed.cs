@@ -96,6 +96,45 @@ public class Seed
         }
 
         await context.SaveChangesAsync();
+        await SeedSeats(context);
+    }
+
+    public static async Task SeedSeats(DataContext context)
+    {
+        if (await context.Seats.AnyAsync())
+        {
+            return;
+        }
+
+        var aircrafts = await context.Aircrafts.ToListAsync();
+        var seatLetters = new[] { "A", "B", "C", "D", "E", "F", "G" };
+
+        foreach (var aircraft in aircrafts)
+        {
+            var seats = new List<Seat>();
+            var seatLetterCount = Math.Min(aircraft.SeatsPerRow, seatLetters.Length);
+
+            for (int row = 1; row <= aircraft.SeatRows; row++)
+            {
+                for (int col = 0; col < seatLetterCount; col++)
+                {
+                    var seat = new Seat
+                    {
+                        SeatNumber = $"{row}{seatLetters[col]}",
+                        SeatRow = row,
+                        AircraftId = aircraft.Id
+                    };
+                    seats.Add(seat);
+                }
+            }
+
+            foreach (var seat in seats)
+            {
+                context.Seats.Add(seat);
+            }
+        }
+
+        await context.SaveChangesAsync();
     }
 
     public static async Task SeedAirports(DataContext context)
