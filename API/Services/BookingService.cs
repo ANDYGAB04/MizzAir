@@ -104,7 +104,7 @@ public class BookingService(DataContext context) : IBookingService
         for (int i = 0; i < 6; i++)
             sb.Append(chars[RandomNumberGenerator.GetInt32(chars.Length)]);
 
-        var bookingreference = "BK" + today + sb;
+        var bookingreference = "BK" + "-" + today + "-" + sb;
 
         return bookingreference;
     }

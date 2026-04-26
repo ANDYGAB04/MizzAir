@@ -20,6 +20,7 @@ public static class ApplicationServiceExtensions
         services.AddAutoMapper(config => { }, typeof(Program).Assembly);
         services.AddScoped<IFlightService, FlightService>();
         services.AddScoped<IBaggageService, BaggageService>();
+        services.AddScoped<IBookingService, BookingService>();
 
         return services;
     }

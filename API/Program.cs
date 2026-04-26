@@ -33,6 +33,7 @@ try
     await Seed.SeedAircraft(context);
     await Seed.SeedAirports(context);
     await Seed.SeedFlights(context);
+    await Seed.SeedSeats(context);
 }
 catch (Exception ex)
 {
