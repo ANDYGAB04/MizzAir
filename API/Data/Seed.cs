@@ -54,4 +54,69 @@ public class Seed
         await userManager.AddToRolesAsync(admin, ["Admin", "Staff"]);
 
     }
+
+    public static async Task SeedFlights(DataContext context)
+    {
+        if (await context.Flights.AnyAsync())
+        {
+            return;
+        }
+
+        var flightData = await File.ReadAllTextAsync("Data/FlightSeedData.json");
+        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        var flights = JsonSerializer.Deserialize<List<Flight>>(flightData, options);
+
+        if (flights == null) return;
+
+        foreach (var flight in flights)
+        {
+            context.Flights.Add(flight);
+        }
+
+        await context.SaveChangesAsync();
+    }
+
+    public static async Task SeedAircraft(DataContext context)
+    {
+        if (await context.Aircrafts.AnyAsync())
+        {
+            return;
+        }
+
+        var aircraft = new List<Aircraft>
+        {
+            new() { Model = "Boeing 737", TotalSeats = 189, SeatRows = 27, SeatsPerRow = 7 },
+            new() { Model = "Airbus A320", TotalSeats = 180, SeatRows = 30, SeatsPerRow = 6 },
+            new() { Model = "Airbus A380", TotalSeats = 525, SeatRows = 75, SeatsPerRow = 7 }
+        };
+
+        foreach (var item in aircraft)
+        {
+            context.Aircrafts.Add(item);
+        }
+
+        await context.SaveChangesAsync();
+    }
+
+    public static async Task SeedAirports(DataContext context)
+    {
+        if (await context.Airports.AnyAsync())
+        {
+            return;
+        }
+
+        var airports = new List<Airport>
+        {
+            new() { Name = "John F. Kennedy International Airport", City = "New York", Country = "USA", IATACode = "JFK" },
+            new() { Name = "Los Angeles International Airport", City = "Los Angeles", Country = "USA", IATACode = "LAX" },
+            new() { Name = "Chicago O'Hare International Airport", City = "Chicago", Country = "USA", IATACode = "ORD" }
+        };
+
+        foreach (var airport in airports)
+        {
+            context.Airports.Add(airport);
+        }
+
+        await context.SaveChangesAsync();
+    }
 }
