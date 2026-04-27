@@ -23,7 +23,7 @@ public class BookingService(DataContext context) : IBookingService
         }
         if (booking.UserId != userId)
         {
-            throw new Exception("User not authorized to cancel this booking");
+            throw new UnauthorizedAccessException("User not authorized to cancel this booking");
         }
 
         var seatsCount = booking.BookingSeats.Count;
