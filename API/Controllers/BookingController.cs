@@ -12,6 +12,19 @@ namespace API.Controllers
 {
     public class BookingController(IBookingService bookingService, IMapper mapper) : BaseApiController
     {
+
+        [Authorize]
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<BookingDto>>> GetBookings()
+        {
+            var userId = User.GetUserId();
+            var bookings = await bookingService.GetBookingList(userId);
+            var bookingsDto = mapper.Map<IEnumerable<BookingDto>>(bookings);
+
+            return Ok(bookingsDto);
+        }
+
+
         [Authorize]
         [HttpPost]
         public async Task<ActionResult<BookingDto>> BookingFlight([FromBody] CreateBookingDto createBookingDto)

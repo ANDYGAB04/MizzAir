@@ -2,6 +2,7 @@ using System;
 using System.Security.Cryptography;
 using System.Text;
 using API.Data;
+using API.DTOs;
 using API.Interface;
 using API.Models;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,13 @@ namespace API.Services;
 
 public class BookingService(DataContext context) : IBookingService
 {
+    public async Task<IEnumerable<Booking>> GetBookingList(int userId)
+    {
+        var bookings = await context.Bookings.Where(x => x.UserId == userId).ToListAsync();
+
+        return bookings;
+    }
+
     public async Task CancelBooking(int userId, int bookingId)
     {
         var booking = await context.Bookings
