@@ -9,4 +9,5 @@ public interface IBookingService
     string GenerateBookingReference();
     Task<bool> ValidateSeatsAvailable(int flightId, List<int> seatIds);
     Task UpdateFlightInventory(int flightId, int seatsBooked);
+    Task CancelBooking(int userId, int bookingId);
 }

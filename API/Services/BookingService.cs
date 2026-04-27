@@ -10,6 +10,30 @@ namespace API.Services;
 
 public class BookingService(DataContext context) : IBookingService
 {
+    public async Task CancelBooking(int userId, int bookingId)
+    {
+        var booking = await context.Bookings
+            .Include(b => b.BookingSeats)
+            .Include(b => b.Flight)
+            .FirstOrDefaultAsync(b => b.Id == bookingId);
+
+        if (booking is null)
+        {
+            throw new Exception("Booking not found");
+        }
+        if (booking.UserId != userId)
+        {
+            throw new Exception("User not authorized to cancel this booking");
+        }
+
+        var seatsCount = booking.BookingSeats.Count;
+        var flight = booking.Flight;
+        flight.AvailableSeats += seatsCount;
+
+        context.Bookings.Remove(booking);
+        await context.SaveChangesAsync();
+    }
+
     public async Task<Booking> CreateBooking(int userId, int flightId, List<int> seatIds)
     {
         // Validate seat list is not empty
@@ -46,7 +70,7 @@ public class BookingService(DataContext context) : IBookingService
 
         var reference = GenerateBookingReference();
 
-        // Use transaction to ensure all-or-nothing booking
+
         using (var transaction = await context.Database.BeginTransactionAsync())
         {
             try
@@ -61,11 +85,10 @@ public class BookingService(DataContext context) : IBookingService
                     FlightId = flightId
                 };
 
-                // Add Booking to Database
+
                 context.Bookings.Add(booking);
                 await context.SaveChangesAsync();
 
-                // Link Seats: For each seat ID in the list, create BookingSeat objects
                 foreach (var seatId in seatIds)
                 {
                     var bookingSeat = new BookingSeat
@@ -77,11 +100,11 @@ public class BookingService(DataContext context) : IBookingService
                 }
                 await context.SaveChangesAsync();
 
-                // Update flight inventory
+
                 flight.AvailableSeats -= seatIds.Count;
                 await context.SaveChangesAsync();
 
-                // Commit transaction
+
                 await transaction.CommitAsync();
 
                 return booking;

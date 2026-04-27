@@ -12,7 +12,7 @@ namespace API.Controllers
 {
     public class BookingController(IBookingService bookingService, IMapper mapper) : BaseApiController
     {
-        //[Authorize]
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<BookingDto>> BookingFlight([FromBody] CreateBookingDto createBookingDto)
         {
@@ -30,6 +30,14 @@ namespace API.Controllers
             var bookingDto = mapper.Map<BookingDto>(booking);
 
             return CreatedAtAction(nameof(BookingFlight), new { id = bookingDto.Id }, bookingDto);
+        }
+        [Authorize]
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteBooking(int id)
+        {
+            var userId = User.GetUserId();
+            await bookingService.CancelBooking(userId, id);
+            return Ok();
         }
     }
 }
