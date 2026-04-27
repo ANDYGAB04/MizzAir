@@ -2,6 +2,7 @@ import { Component, inject, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { BaggageService } from '../services/baggage.service';
+import { FlightService } from '../services/flight.service';
 import { FlightStepperComponent } from '../flights/stepper/flight-stepper.component';
 import { BaggageCardComponent } from './baggage-card/baggage-card.component';
 import { BaggageTypeDto } from '../../models/baggage';
@@ -15,6 +16,7 @@ import { BaggageTypeDto } from '../../models/baggage';
 })
 export class BaggageComponent {
   baggageService = inject(BaggageService);
+  flightService = inject(FlightService);
   router = inject(Router);
 
   currentStep = signal<string>('baggage');
@@ -58,6 +60,10 @@ export class BaggageComponent {
 
   isCheckedBaggageSelected(baggageId: number): boolean {
     return this.baggageService.selectedCheckedBaggage()?.baggageTypeId === baggageId;
+  }
+
+  getSelectedFlight() {
+    return this.flightService.getSelectedFlight();
   }
 
   continue(): void {

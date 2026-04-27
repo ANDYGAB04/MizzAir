@@ -113,7 +113,7 @@
             <td>{{ flight.duration }} min</td>
             <td class="price">${{ flight.price }}</td>
             <td>
-              <button class="btn btn-select" [disabled]="flight.availableSeats === 0">
+              <button class="btn btn-select" [disabled]="flight.availableSeats === 0" (click)="selectFlight(flight)">
                 Select
               </button>
             </td>

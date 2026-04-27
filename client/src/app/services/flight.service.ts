@@ -12,6 +12,7 @@ export class FlightService {
 
   // Signals
   flights = signal<Flight[]>([]);
+  selectedFlight = signal<Flight | null>(null);
   airports = signal<Airport[]>([]);
   isLoading = signal(false);
   error = signal<string | null>(null);
@@ -56,5 +57,13 @@ export class FlightService {
         this.airports.set([]);
       }
     });
+  }
+
+  setSelectedFlight(flight: Flight): void {
+    this.selectedFlight.set(flight);
+  }
+
+  getSelectedFlight(): Flight | null {
+    return this.selectedFlight();
   }
 }

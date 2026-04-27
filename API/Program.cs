@@ -34,6 +34,7 @@ try
     await Seed.SeedUsers(userManager, roleManager);
     await Seed.SeedAircraft(context);
     await Seed.SeedAirports(context);
+    await Seed.SeedBaggageTypes(context);
     await Seed.SeedFlights(context);
     await Seed.SeedSeats(context);
 }
