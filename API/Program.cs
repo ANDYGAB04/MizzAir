@@ -1,5 +1,6 @@
 using API.Data;
 using API.Extensions;
+using API.Middleware;
 using API.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ builder.Services.AddIdentityServices(builder.Configuration);
 
 var app = builder.Build();
 
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseCors(opt =>
     opt.AllowAnyHeader().AllowAnyMethod()
     .WithOrigins("http://localhost:4200", "https://localhost:4200"));
@@ -33,6 +35,7 @@ try
     await Seed.SeedAircraft(context);
     await Seed.SeedAirports(context);
     await Seed.SeedFlights(context);
+    await Seed.SeedSeats(context);
 }
 catch (Exception ex)
 {
