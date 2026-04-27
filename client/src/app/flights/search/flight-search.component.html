@@ -19,7 +19,7 @@
             class="form-control">
             <option value="" disabled>Select origin</option>
             <option *ngFor="let airport of flightService.airports()" [value]="airport.id">
-              {{ airport.city }} ({{ airport.code }})
+              {{ airport.city }} ({{ airport.iataCode }})
             </option>
           </select>
         </div>
@@ -34,7 +34,7 @@
             class="form-control">
             <option value="" disabled>Select destination</option>
             <option *ngFor="let airport of flightService.airports()" [value]="airport.id">
-              {{ airport.city }} ({{ airport.code }})
+              {{ airport.city }} ({{ airport.iataCode }})
             </option>
           </select>
         </div>

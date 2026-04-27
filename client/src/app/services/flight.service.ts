@@ -46,14 +46,15 @@ export class FlightService {
   }
 
   private loadAirports() {
-    // Mock airports data - replace with API call if endpoint exists
-    this.airports.set([
-      { id: 1, name: 'Bucharest Henri Coandă', city: 'Bucharest', code: 'OTP' },
-      { id: 2, name: 'Iași International', city: 'Iași', code: 'IAS' },
-      { id: 3, name: 'Constanța International', city: 'Constanța', code: 'CND' },
-      { id: 4, name: 'Sibiu International', city: 'Sibiu', code: 'SBZ' },
-      { id: 5, name: 'Timișoara Traian Vuia', city: 'Timișoara', code: 'TSR' },
-      { id: 6, name: 'Cluj Napoca International', city: 'Cluj', code: 'CLJ' }
-    ]);
+    this.http.get<Airport[]>(this.baseUrl + 'airport').subscribe({
+      next: (data) => {
+        this.airports.set(data);
+      },
+      error: (err) => {
+        console.error('Failed to load airports:', err);
+        // Fallback to empty array if API fails
+        this.airports.set([]);
+      }
+    });
   }
 }
