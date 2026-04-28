@@ -1,8 +1,6 @@
-using System;
 using System.Security.Cryptography;
 using System.Text;
 using API.Data;
-using API.DTOs;
 using API.Interface;
 using API.Models;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +11,13 @@ public class BookingService(DataContext context) : IBookingService
 {
     public async Task<IEnumerable<Booking>> GetBookingList(int userId)
     {
-        var bookings = await context.Bookings.Where(x => x.UserId == userId).ToListAsync();
+        var bookings = await context.Bookings.Where(x => x.UserId == userId)
+            .Include(b => b.BookingSeats)
+                .ThenInclude(bs => bs.Seat)
+            .Include(b => b.BookingBaggages)
+                .ThenInclude(bb => bb.BaggageType)
+            .Include(b => b.Flight)
+            .ToListAsync();
 
         return bookings;
     }
@@ -42,7 +46,7 @@ public class BookingService(DataContext context) : IBookingService
         await context.SaveChangesAsync();
     }
 
-    public async Task<Booking> CreateBooking(int userId, int flightId, List<int> seatIds)
+    public async Task<Booking> CreateBooking(int userId, int flightId, List<int> seatIds, List<int> BaggageTypeIds)
     {
         // Validate seat list is not empty
         if (seatIds.Count == 0)
@@ -69,6 +73,13 @@ public class BookingService(DataContext context) : IBookingService
 
         await ValidateSeatsAvailable(flightId, seatIds);
 
+        if (BaggageTypeIds.Count > 0)
+        {
+            var validBaggageCount = await context.BaggageTypes.CountAsync(b => BaggageTypeIds.Contains(b.Id));
+            if (validBaggageCount != BaggageTypeIds.Count)
+                throw new Exception("One or more baggage types do not exist");
+        }
+
         var user = await context.Users.FindAsync(userId);
 
         if (user is null)
@@ -78,51 +89,51 @@ public class BookingService(DataContext context) : IBookingService
 
         var reference = GenerateBookingReference();
 
-
-        using (var transaction = await context.Database.BeginTransactionAsync())
+        var booking = new Booking
         {
-            try
+            BookingReference = reference,
+            BookingDate = DateTime.UtcNow,
+            Status = "Confirmed",
+            TotalPrice = flight.Price * seatIds.Count,
+            UserId = user.Id,
+            FlightId = flightId
+        };
+
+        context.Bookings.Add(booking);
+        await context.SaveChangesAsync();
+
+        foreach (var seatId in seatIds)
+        {
+            var bookingSeat = new BookingSeat
             {
-                var booking = new Booking
-                {
-                    BookingReference = reference,
-                    BookingDate = DateTime.UtcNow,
-                    Status = "Confirmed",
-                    TotalPrice = flight.Price * seatIds.Count,
-                    UserId = user.Id,
-                    FlightId = flightId
-                };
-
-
-                context.Bookings.Add(booking);
-                await context.SaveChangesAsync();
-
-                foreach (var seatId in seatIds)
-                {
-                    var bookingSeat = new BookingSeat
-                    {
-                        BookingId = booking.Id,
-                        SeatId = seatId
-                    };
-                    context.BookingSeats.Add(bookingSeat);
-                }
-                await context.SaveChangesAsync();
-
-
-                flight.AvailableSeats -= seatIds.Count;
-                await context.SaveChangesAsync();
-
-
-                await transaction.CommitAsync();
-
-                return booking;
-            }
-            catch
-            {
-                await transaction.RollbackAsync();
-                throw;
-            }
+                BookingId = booking.Id,
+                SeatId = seatId
+            };
+            context.BookingSeats.Add(bookingSeat);
         }
+
+        foreach (var baggageTypeId in BaggageTypeIds)
+        {
+            var bookingBaggage = new BookingBaggage
+            {
+                BookingId = booking.Id,
+                BaggageTypeId = baggageTypeId
+            };
+            context.BookingBaggages.Add(bookingBaggage);
+        }
+
+        flight.AvailableSeats -= seatIds.Count;
+        await context.SaveChangesAsync();
+
+        var bookingWithIncludes = await context.Bookings
+            .Include(b => b.BookingSeats)
+                .ThenInclude(bs => bs.Seat)
+            .Include(b => b.BookingBaggages)
+                .ThenInclude(bb => bb.BaggageType)
+            .Include(b => b.Flight)
+            .FirstOrDefaultAsync(b => b.Id == booking.Id);
+
+        return bookingWithIncludes ?? booking;
     }
 
     public string GenerateBookingReference()
