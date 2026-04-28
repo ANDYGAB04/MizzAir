@@ -417,3 +417,13 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# Idea folders from RidesCS JetBrains
+.idea/
+
+# Codex file
+API/.codex
+.codex
+
+# SQL Zorin Identifier
+identifier.sqlite

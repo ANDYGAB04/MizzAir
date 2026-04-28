@@ -24,7 +24,7 @@ public class Seed
 
         var roles = new List<AppRole>
         {
-            new() {Name = "Member"},
+            new() {Name = "Passenger"},
             new() {Name = "Admin"},
             new() {Name = "Staff"},
         };
@@ -39,7 +39,7 @@ public class Seed
 
             user.Email = user.Email!.ToLower();
             await userManager.CreateAsync(user, "Pa$$w0rd");
-            await userManager.AddToRoleAsync(user, "Member");
+            await userManager.AddToRoleAsync(user, "Passenger");
         }
 
         var admin = new User
@@ -47,7 +47,8 @@ public class Seed
             FirstName = "admin",
             LastName = "admin",
             Email = "admin@gmail.com",
-            Address = ""
+            Address = "",
+            UserName = "admin"
         };
 
         await userManager.CreateAsync(admin, "Pa$$w0rd");

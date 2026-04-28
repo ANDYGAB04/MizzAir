@@ -35,7 +35,8 @@ public static class IdentityServiceExtensions
 
         services.AddAuthorizationBuilder()
            .AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"))
-           .AddPolicy("StaffRole", policy => policy.RequireRole("Admin", "Staff"));
+           .AddPolicy("StaffRole", policy => policy.RequireRole("Admin", "Staff"))
+           .AddPolicy("RequireStaffOrAdminRole", policy => policy.RequireRole("Admin", "Staff"));
 
 
         return services;
