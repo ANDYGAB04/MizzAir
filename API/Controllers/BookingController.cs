@@ -39,7 +39,7 @@ namespace API.Controllers
                 return BadRequest("No seat were chosen");
             }
 
-            var booking = await bookingService.CreateBooking(userId, createBookingDto.FlightId, createBookingDto.SeatIds);
+            var booking = await bookingService.CreateBooking(userId, createBookingDto.FlightId, createBookingDto.SeatIds, createBookingDto.BaggageTypeIds);
             var bookingDto = mapper.Map<BookingDto>(booking);
 
             return CreatedAtAction(nameof(BookingFlight), new { id = bookingDto.Id }, bookingDto);
