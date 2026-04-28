@@ -20,6 +20,7 @@ export class BaggageComponent {
   router = inject(Router);
 
   currentStep = signal<string>('baggage');
+  numberOfPassengers = signal<number>(1);
 
   // Computed signals for categorized baggage
   cabinBaggages = computed(() => {
@@ -38,28 +39,53 @@ export class BaggageComponent {
     return this.baggageService.getTotalBaggagePrice();
   });
 
+  constructor() {
+    // Initialize passengers when component loads
+    effect(() => {
+      const passengers = this.flightService.getNumberOfPassengers();
+      this.numberOfPassengers.set(passengers);
+      this.baggageService.initializePassengers(passengers);
+    });
+  }
+
   onCabinBaggageSelect(baggage: BaggageTypeDto) {
-    if (this.baggageService.selectedCabinBaggage()?.baggageTypeId === baggage.id) {
-      this.baggageService.deselectBaggage('cabin');
+    const currentIndex = this.baggageService.currentPassengerIndex();
+    const isSelected = this.baggageService.isBaggageSelectedForPassenger(currentIndex, baggage.id, 'cabin');
+    
+    if (isSelected) {
+      this.baggageService.deselectBaggageForPassenger(currentIndex, 'cabin');
     } else {
-      this.baggageService.selectBaggage('cabin', baggage);
+      this.baggageService.selectBaggageForPassenger(currentIndex, 'cabin', baggage);
     }
   }
 
   onCheckedBaggageSelect(baggage: BaggageTypeDto) {
-    if (this.baggageService.selectedCheckedBaggage()?.baggageTypeId === baggage.id) {
-      this.baggageService.deselectBaggage('checked');
+    const currentIndex = this.baggageService.currentPassengerIndex();
+    const isSelected = this.baggageService.isBaggageSelectedForPassenger(currentIndex, baggage.id, 'checked');
+    
+    if (isSelected) {
+      this.baggageService.deselectBaggageForPassenger(currentIndex, 'checked');
     } else {
-      this.baggageService.selectBaggage('checked', baggage);
+      this.baggageService.selectBaggageForPassenger(currentIndex, 'checked', baggage);
     }
   }
 
   isCabinBaggageSelected(baggageId: number): boolean {
-    return this.baggageService.selectedCabinBaggage()?.baggageTypeId === baggageId;
+    const currentIndex = this.baggageService.currentPassengerIndex();
+    return this.baggageService.isBaggageSelectedForPassenger(currentIndex, baggageId, 'cabin');
   }
 
   isCheckedBaggageSelected(baggageId: number): boolean {
-    return this.baggageService.selectedCheckedBaggage()?.baggageTypeId === baggageId;
+    const currentIndex = this.baggageService.currentPassengerIndex();
+    return this.baggageService.isBaggageSelectedForPassenger(currentIndex, baggageId, 'checked');
+  }
+
+  selectPassenger(index: number): void {
+    this.baggageService.setCurrentPassenger(index);
+  }
+
+  getCurrentPassenger(): number {
+    return this.baggageService.currentPassengerIndex();
   }
 
   getSelectedFlight() {

@@ -27,6 +27,19 @@
     </div>
   </div>
 
+  <!-- Passenger Tabs -->
+  <div class="passenger-tabs" *ngIf="numberOfPassengers() > 1">
+    <div class="tabs-container">
+      <button 
+        *ngFor="let i of [].constructor(numberOfPassengers()); let idx = index"
+        [ngClass]="{'active': idx === getCurrentPassenger()}"
+        (click)="selectPassenger(idx)"
+        class="tab-button">
+        Passenger {{ idx + 1 }}
+      </button>
+    </div>
+  </div>
+
   <!-- Cabin Baggage Section -->
   <div class="baggage-category">
     <h2>Cabin Baggage</h2>

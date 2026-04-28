@@ -13,6 +13,7 @@ export class FlightService {
   // Signals
   flights = signal<Flight[]>([]);
   selectedFlight = signal<Flight | null>(null);
+  numberOfPassengers = signal<number>(1);
   airports = signal<Airport[]>([]);
   isLoading = signal(false);
   error = signal<string | null>(null);
@@ -65,5 +66,13 @@ export class FlightService {
 
   getSelectedFlight(): Flight | null {
     return this.selectedFlight();
+  }
+
+  setNumberOfPassengers(count: number): void {
+    this.numberOfPassengers.set(count);
+  }
+
+  getNumberOfPassengers(): number {
+    return this.numberOfPassengers();
   }
 }

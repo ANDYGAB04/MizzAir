@@ -45,6 +45,49 @@
   margin: 0 auto;
 }
 
+/* Passenger Tabs */
+.passenger-tabs {
+  max-width: 1200px;
+  margin: 0 auto 3rem auto;
+}
+
+.tabs-container {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.tab-button {
+  padding: 0.75rem 1.5rem;
+  background: #4a7c59;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  opacity: 0.55;
+}
+
+.tab-button:hover {
+  opacity: 0.75;
+}
+
+.tab-button.active {
+  opacity: 1;
+  box-shadow: 0 4px 12px rgba(74, 124, 89, 0.4);
+}
+
+.tab-button.active:hover {
+  background: #3a6449;
+  opacity: 1;
+}
+
 /* Route Info */
 .route-info {
   display: flex;
@@ -71,7 +114,8 @@
 
 /* Baggage Category */
 .baggage-category {
-  margin-bottom: 3rem;
+  max-width: 1200px;
+  margin: 0 auto 3rem;
 }
 
 .baggage-category h2 {
@@ -98,6 +142,8 @@
 
 /* Action Section */
 .action-section {
+  max-width: 1200px;
+  margin: 3rem auto 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -106,7 +152,6 @@
   padding: 2rem;
   border-radius: 10px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  margin-top: 3rem;
   flex-wrap: wrap;
 }
 

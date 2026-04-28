@@ -11,6 +11,8 @@ public class AutoMapperProfiles : Profile
     {
         CreateMap<RegisterDto, User>();
         CreateMap<Airport, AirportDto>();
+        CreateMap<Seat, SeatDto>();
+        CreateMap<Aircraft, AircraftDto>();
         CreateMap<Flight, FlightDto>()
             .ForMember(dest => dest.AircraftType, o => o.MapFrom(src => src.Aircraft.Model))
             .ForMember(dest => dest.DepartureAirportName, o => o.MapFrom(src => src.DepartureAirport.Name))

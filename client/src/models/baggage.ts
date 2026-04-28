@@ -11,3 +11,9 @@ export interface SelectedBaggage {
   type: string;
   price: number;
 }
+
+export interface PassengerBaggage {
+  passengerIndex: number;
+  cabinBaggage: SelectedBaggage | null;
+  checkedBaggage: SelectedBaggage | null;
+}

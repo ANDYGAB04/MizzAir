@@ -55,6 +55,7 @@ export class FlightSearchComponent {
 
   selectFlight(flight: Flight): void {
     this.flightService.setSelectedFlight(flight);
+    this.flightService.setNumberOfPassengers(this.numberOfPassengers());
     this.router.navigate(['/baggage']);
   }
 }
