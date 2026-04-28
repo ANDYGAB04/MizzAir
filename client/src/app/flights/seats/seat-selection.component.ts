@@ -1,10 +1,20 @@
 import { Component, inject, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { SeatSelectionService } from '../../services/seat-selection.service';
 import { FlightService } from '../../services/flight.service';
 import { BaggageService } from '../../services/baggage.service';
+import { AuthService } from '../../services/auth.service';
 import { FlightStepperComponent } from '../stepper/flight-stepper.component';
+import { environment } from '../../../environments/environment';
+
+interface CreateBookingRequest {
+  flightId: number;
+  seatIds: number[];
+  baggageTypeIds: number[];
+}
 
 @Component({
   selector: 'app-seat-selection',
@@ -14,14 +24,19 @@ import { FlightStepperComponent } from '../stepper/flight-stepper.component';
   styleUrl: './seat-selection.component.css'
 })
 export class SeatSelectionComponent {
+  private http = inject(HttpClient);
+  private authService = inject(AuthService);
+  private toastr = inject(ToastrService);
   seatSelectionService = inject(SeatSelectionService);
   flightService = inject(FlightService);
   baggageService = inject(BaggageService);
   router = inject(Router);
+  baseUrl = environment.apiUrl;
 
   currentStep = signal<string>('seat');
   numberOfPassengers = signal<number>(1);
   isLoading = signal(false);
+  isBooking = signal(false);
   error = signal<string | null>(null);
 
   // Seat grid
@@ -146,9 +161,65 @@ export class SeatSelectionComponent {
     return this.flightService.getSelectedFlight();
   }
 
+  private getSelectedBaggageTypeIds(): number[] {
+    const baggageIds = this.baggageService
+      .getAllPassengerBaggages()
+      .flatMap(passenger => [
+        passenger.cabinBaggage?.baggageTypeId,
+        passenger.checkedBaggage?.baggageTypeId
+      ])
+      .filter((id): id is number => id !== null && id !== undefined);
+
+    return [...new Set(baggageIds)];
+  }
+
   book(): void {
-    if (this.isFormValid()) {
-      this.router.navigate(['/confirmation']);
+    if (!this.isFormValid() || this.isBooking()) {
+      return;
     }
+
+    const user = this.authService.currentUser();
+    const flight = this.flightService.getSelectedFlight();
+
+    if (!user?.token) {
+      this.toastr.error('Please login before booking a flight.');
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    if (!flight) {
+      this.toastr.error('No flight selected.');
+      return;
+    }
+
+    const bookingRequest: CreateBookingRequest = {
+      flightId: flight.id,
+      seatIds: this.seatSelectionService.getSelectedSeatIds(),
+      baggageTypeIds: this.getSelectedBaggageTypeIds()
+    };
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${user.token}`
+    });
+
+    this.isBooking.set(true);
+    this.error.set(null);
+
+    this.http.post(this.baseUrl + 'booking', bookingRequest, { headers }).subscribe({
+      next: () => {
+        this.toastr.success('Booking created successfully.');
+        this.seatSelectionService.reset();
+        this.baggageService.reset();
+        this.router.navigate(['/bookings']);
+      },
+      error: (err) => {
+        this.error.set(err?.error || 'Failed to create booking.');
+        this.toastr.error(this.error() || 'Failed to create booking.');
+        this.isBooking.set(false);
+      },
+      complete: () => {
+        this.isBooking.set(false);
+      }
+    });
   }
 }
