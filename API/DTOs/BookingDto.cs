@@ -13,4 +13,5 @@ public class BookingDto
     public DateTime DepartureTime { get; set; }
     public DateTime ArrivalTime { get; set; }
     public List<string> SeatNumbers { get; set; } = [];
+    public List<string> BaggageTypes { get; set; } = [];
 }

@@ -6,4 +6,5 @@ public class CreateBookingDto
 {
     public int FlightId { get; set; }
     public List<int> SeatIds { get; set; } = [];
+    public List<int> BaggageTypeIds { get; set; } = [];
 }
