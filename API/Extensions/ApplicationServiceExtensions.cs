@@ -21,6 +21,9 @@ public static class ApplicationServiceExtensions
         services.AddScoped<IFlightService, FlightService>();
         services.AddScoped<IBaggageService, BaggageService>();
         services.AddScoped<IBookingService, BookingService>();
+        services.AddScoped<IAirportService, AirportService>();
+        services.AddScoped<ISeatService, SeatService>();
+        services.AddScoped<IAircraftService, AircraftService>();
 
         return services;
     }

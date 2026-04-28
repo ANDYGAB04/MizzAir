@@ -1,0 +1,116 @@
+<div class="seat-selection-container">
+  <!-- Booking Progress Stepper -->
+  <app-flight-stepper [activeStep]="currentStep()"></app-flight-stepper>
+
+  <!-- Header Section -->
+  <div class="seat-header">
+    <h1>Select Your Seats</h1>
+  </div>
+
+  <!-- Loading/Error States -->
+  <div *ngIf="isLoading()" class="loading-message">
+    Loading seats...
+  </div>
+
+  <div *ngIf="error()" class="error-message">
+    {{ error() }}
+  </div>
+
+  <!-- Seat Selection Section -->
+  <div *ngIf="!isLoading()" class="selection-section">
+    <!-- Route Info -->
+    <div class="route-info" *ngIf="getSelectedFlight()">
+      <div class="route-item">{{ getSelectedFlight()?.departureAirportName }}</div>
+      <div class="arrow">→</div>
+      <div class="route-item">{{ getSelectedFlight()?.arrivalAirportName }}</div>
+    </div>
+
+    <!-- Passenger Requirement Info -->
+    <div class="passenger-info">
+      <p>Please select <strong>{{ numberOfPassengers() }} seat(s)</strong> for your booking</p>
+    </div>
+
+    <!-- Main Seat Selection Area -->
+    <div class="seat-selection-area">
+      <!-- Seat Grid -->
+      <div class="seat-grid-container">
+        <div class="seat-grid">
+          <div *ngFor="let rowData of seatsGrid()" class="seat-row">
+            <div class="row-label">{{ rowData.row }}</div>
+            <div class="seats-in-row">
+              <button
+                *ngFor="let seat of rowData.seats"
+                [ngClass]="{'occupied': isSeatBooked(seat.id), 'selected': isSeatSelected(seat.id), 'available': !isSeatBooked(seat.id) && !isSeatSelected(seat.id)}"
+                [disabled]="isSeatBooked(seat.id)"
+                (click)="selectSeat(seat)"
+                class="seat-btn"
+                [attr.title]="seat.seatNumber">
+                {{ seat.seatNumber }}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Legend -->
+        <div class="seat-legend">
+          <div class="legend-item">
+            <div class="legend-seat available"></div>
+            <span>Available</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-seat selected"></div>
+            <span>Selected</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-seat occupied"></div>
+            <span>Occupied</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Selected Seats Panel -->
+      <div class="selected-seats-panel">
+        <h2>Selected Seats ({{ selectedSeats().length }}/{{ numberOfPassengers() }})</h2>
+        
+        <div class="seats-list">
+          <div *ngFor="let seat of sortedSelectedSeats()" class="seat-item">
+            <span class="seat-info">Row {{ seat.seatRow }}, Seat {{ seat.seatNumber }}</span>
+            <button class="remove-btn" (click)="selectSeat(seat)" title="Remove seat">
+              ✕
+            </button>
+          </div>
+          
+          <div *ngIf="selectedSeats().length === 0" class="no-seats">
+            No seats selected yet
+          </div>
+        </div>
+
+        <!-- Cost Summary -->
+        <div class="cost-summary" *ngIf="isFormValid()">
+          <div class="cost-breakdown">
+            <div class="cost-item">
+              <span>Flight ({{ numberOfPassengers() }} × {{ getSelectedFlight()?.price || 0 | currency }})</span>
+              <span>{{ (getSelectedFlight()?.price || 0) * numberOfPassengers() | currency }}</span>
+            </div>
+            <div class="cost-item">
+              <span>Baggage</span>
+              <span>{{ baggageService.getTotalBaggagePrice() | currency }}</span>
+            </div>
+            <div class="cost-total">
+              <span>Total</span>
+              <span>{{ totalCost() | currency }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Book Button -->
+        <button 
+          class="continue-btn" 
+          [disabled]="!isFormValid()"
+          (click)="book()">
+          Book
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -16,15 +16,29 @@
     {{ baggageService.error() }}
   </div>
 
-  // Commented out route info for now, can be added back in later when we have dynamic data
+ 
   <!-- Baggage Selection Section -->
-  <!-- <div *ngIf="!baggageService.isLoading()" class="selection-section">
-    // Route info
-    <div class="route-info">
-      <div class="route-item">Origin City</div>
+  <div *ngIf="!baggageService.isLoading()" class="selection-section">
+    <!-- Route info -->
+    <div class="route-info" *ngIf="getSelectedFlight()">
+      <div class="route-item">{{ getSelectedFlight()?.departureAirportName }}</div>
       <div class="arrow">→</div>
-      <div class="route-item">Destination City</div>
-    </div> -->
+      <div class="route-item">{{ getSelectedFlight()?.arrivalAirportName }}</div>
+    </div>
+  </div>
+
+  <!-- Passenger Tabs -->
+  <div class="passenger-tabs" *ngIf="numberOfPassengers() > 1">
+    <div class="tabs-container">
+      <button 
+        *ngFor="let i of [].constructor(numberOfPassengers()); let idx = index"
+        [ngClass]="{'active': idx === getCurrentPassenger()}"
+        (click)="selectPassenger(idx)"
+        class="tab-button">
+        Passenger {{ idx + 1 }}
+      </button>
+    </div>
+  </div>
 
   <!-- Cabin Baggage Section -->
   <div class="baggage-category">

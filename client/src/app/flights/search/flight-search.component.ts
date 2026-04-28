@@ -1,9 +1,10 @@
 import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { FlightService } from '../../services/flight.service';
 import { FlightStepperComponent } from '../stepper/flight-stepper.component';
-import { SearchFlightRequest } from '../../../models/flight';
+import { SearchFlightRequest, Flight } from '../../../models/flight';
 
 @Component({
   selector: 'app-flight-search',
@@ -14,6 +15,7 @@ import { SearchFlightRequest } from '../../../models/flight';
 })
 export class FlightSearchComponent {
   flightService = inject(FlightService);
+  router = inject(Router);
 
   // Current step
   currentStep = signal<string>('flights');
@@ -49,5 +51,11 @@ export class FlightSearchComponent {
     };
 
     this.flightService.searchFlights(searchRequest);
+  }
+
+  selectFlight(flight: Flight): void {
+    this.flightService.setSelectedFlight(flight);
+    this.flightService.setNumberOfPassengers(this.numberOfPassengers());
+    this.router.navigate(['/baggage']);
   }
 }

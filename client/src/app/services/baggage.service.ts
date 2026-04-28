@@ -1,7 +1,7 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { BaggageTypeDto, SelectedBaggage } from '../../models/baggage';
+import { BaggageTypeDto, SelectedBaggage, PassengerBaggage } from '../../models/baggage';
 
 @Injectable({
   providedIn: 'root'
@@ -12,10 +12,15 @@ export class BaggageService {
 
   // Signals
   baggageOptions = signal<BaggageTypeDto[]>([]);
-  selectedCabinBaggage = signal<SelectedBaggage | null>(null);
-  selectedCheckedBaggage = signal<SelectedBaggage | null>(null);
+  passengerBaggages = signal<PassengerBaggage[]>([]);
+  currentPassengerIndex = signal<number>(0);
   isLoading = signal(false);
   error = signal<string | null>(null);
+
+  // Computed signal for current passenger baggages
+  currentPassengerBaggage = computed(() => {
+    return this.passengerBaggages()[this.currentPassengerIndex()] || null;
+  });
 
   constructor() {
     this.loadBaggageOptions();
@@ -28,11 +33,6 @@ export class BaggageService {
     return this.http.get<BaggageTypeDto[]>(this.baseUrl + 'baggage/options').subscribe({
       next: (data) => {
         this.baggageOptions.set(data);
-        // Auto-select cabin baggage (first one that contains "Cabin")
-        const cabinBaggage = data.find(b => b.type.toLowerCase().includes('cabin'));
-        if (cabinBaggage) {
-          this.selectBaggage('cabin', cabinBaggage);
-        }
         this.isLoading.set(false);
       },
       error: (err) => {
@@ -43,48 +43,102 @@ export class BaggageService {
     });
   }
 
-  selectBaggage(category: 'cabin' | 'checked', baggage: BaggageTypeDto) {
+  initializePassengers(numberOfPassengers: number): void {
+    const passengers: PassengerBaggage[] = [];
+    
+    // Find default cabin baggage
+    const defaultCabinBaggage = this.baggageOptions().find(b => 
+      b.type.toLowerCase().includes('cabin')
+    );
+    
+    for (let i = 0; i < numberOfPassengers; i++) {
+      passengers.push({
+        passengerIndex: i,
+        cabinBaggage: defaultCabinBaggage ? {
+          baggageTypeId: defaultCabinBaggage.id,
+          type: defaultCabinBaggage.type,
+          price: defaultCabinBaggage.price
+        } : null,
+        checkedBaggage: null
+      });
+    }
+    
+    this.passengerBaggages.set(passengers);
+    this.currentPassengerIndex.set(0);
+  }
+
+  selectBaggageForPassenger(passengerIndex: number, category: 'cabin' | 'checked', baggage: BaggageTypeDto): void {
+    const passengers = this.passengerBaggages();
+    const passenger = passengers[passengerIndex];
+    
+    if (!passenger) return;
+    
     const selected: SelectedBaggage = {
       baggageTypeId: baggage.id,
       type: baggage.type,
       price: baggage.price
     };
-
+    
     if (category === 'cabin') {
-      this.selectedCabinBaggage.set(selected);
+      passenger.cabinBaggage = selected;
     } else {
-      this.selectedCheckedBaggage.set(selected);
+      passenger.checkedBaggage = selected;
+    }
+    
+    this.passengerBaggages.set([...passengers]);
+  }
+
+  deselectBaggageForPassenger(passengerIndex: number, category: 'cabin' | 'checked'): void {
+    const passengers = this.passengerBaggages();
+    const passenger = passengers[passengerIndex];
+    
+    if (!passenger) return;
+    
+    if (category === 'cabin') {
+      passenger.cabinBaggage = null;
+    } else {
+      passenger.checkedBaggage = null;
+    }
+    
+    this.passengerBaggages.set([...passengers]);
+  }
+
+  setCurrentPassenger(index: number): void {
+    if (index >= 0 && index < this.passengerBaggages().length) {
+      this.currentPassengerIndex.set(index);
     }
   }
 
-  deselectBaggage(category: 'cabin' | 'checked') {
+  isBaggageSelectedForPassenger(passengerIndex: number, baggageId: number, category: 'cabin' | 'checked'): boolean {
+    const passenger = this.passengerBaggages()[passengerIndex];
+    if (!passenger) return false;
+    
     if (category === 'cabin') {
-      this.selectedCabinBaggage.set(null);
+      return passenger.cabinBaggage?.baggageTypeId === baggageId;
     } else {
-      this.selectedCheckedBaggage.set(null);
+      return passenger.checkedBaggage?.baggageTypeId === baggageId;
     }
   }
 
-  getSelectedBaggages() {
-    return {
-      cabin: this.selectedCabinBaggage(),
-      checked: this.selectedCheckedBaggage()
-    };
+  getAllPassengerBaggages(): PassengerBaggage[] {
+    return this.passengerBaggages();
   }
 
   getTotalBaggagePrice(): number {
     let total = 0;
-    if (this.selectedCabinBaggage()) {
-      total += this.selectedCabinBaggage()!.price;
-    }
-    if (this.selectedCheckedBaggage()) {
-      total += this.selectedCheckedBaggage()!.price;
-    }
+    this.passengerBaggages().forEach(passenger => {
+      if (passenger.cabinBaggage) {
+        total += passenger.cabinBaggage.price;
+      }
+      if (passenger.checkedBaggage) {
+        total += passenger.checkedBaggage.price;
+      }
+    });
     return total;
   }
 
-  reset() {
-    this.selectedCabinBaggage.set(null);
-    this.selectedCheckedBaggage.set(null);
+  reset(): void {
+    this.passengerBaggages.set([]);
+    this.currentPassengerIndex.set(0);
   }
 }

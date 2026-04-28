@@ -158,4 +158,25 @@ public class Seed
 
         await context.SaveChangesAsync();
     }
+
+    public static async Task SeedBaggageTypes(DataContext context)
+    {
+        if (await context.BaggageTypes.AnyAsync())
+        {
+            return;
+        }
+
+        var baggageTypes = new List<BaggageType>
+        {
+            new() { Type = "Cabin Baggage", MaxDimensions = "55x40x20cm", MaxWeight = 7, Price = 0 },
+            new() { Type = "Checked Baggage", MaxDimensions = "81x119x119cm", MaxWeight = 23, Price = 15 }
+        };
+
+        foreach (var baggageType in baggageTypes)
+        {
+            context.BaggageTypes.Add(baggageType);
+        }
+
+        await context.SaveChangesAsync();
+    }
 }
