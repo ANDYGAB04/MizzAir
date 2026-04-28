@@ -10,6 +10,8 @@ public class BookingDto
     public required string Status { get; set; }
     public decimal TotalPrice { get; set; }
     public int FlightId { get; set; }
+    public required string DepartureAirportName { get; set; }
+    public required string ArrivalAirportName { get; set; }
     public DateTime DepartureTime { get; set; }
     public DateTime ArrivalTime { get; set; }
     public List<string> SeatNumbers { get; set; } = [];

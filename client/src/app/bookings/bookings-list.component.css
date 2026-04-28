@@ -1,0 +1,208 @@
+.bookings-container {
+  min-height: calc(100vh - 70px);
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 2rem;
+}
+
+.bookings-header {
+  max-width: 1200px;
+  margin: 0 auto 2rem;
+  padding: 1rem 0;
+}
+
+.bookings-header h1 {
+  font-size: 2.5rem;
+  color: #333;
+  margin: 0 0 0.75rem;
+  font-weight: 700;
+}
+
+.bookings-header p {
+  color: #666;
+  font-size: 1.05rem;
+  margin: 0;
+}
+
+.bookings-panel {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.bookings-table-wrapper {
+  overflow-x: auto;
+}
+
+.bookings-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.bookings-table thead {
+  background: #f5f5f5;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.bookings-table th,
+.bookings-table td {
+  padding: 1rem;
+  text-align: left;
+  border: 1px solid #e0e0e0;
+  vertical-align: middle;
+}
+
+.bookings-table th {
+  color: #333;
+  font-weight: 600;
+}
+
+.bookings-table td {
+  color: #666;
+}
+
+.bookings-table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.bookings-table tbody tr:hover {
+  background-color: #f9f9f9;
+}
+
+.bookings-table tbody tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.route-cell {
+  min-width: 260px;
+}
+
+.route-main {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #333;
+  font-weight: 600;
+}
+
+.route-arrow {
+  color: #667eea;
+  font-size: 1.1rem;
+}
+
+.booking-reference {
+  display: inline-block;
+  margin-top: 0.4rem;
+  font-size: 0.85rem;
+  color: #8a8a8a;
+}
+
+.date-main {
+  color: #333;
+  font-weight: 600;
+}
+
+.date-secondary {
+  margin-top: 0.35rem;
+  color: #777;
+  font-size: 0.92rem;
+}
+
+.price-cell {
+  color: #667eea;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.actions-column {
+  width: 140px;
+  text-align: center;
+}
+
+.loading-state,
+.empty-state {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.empty-state h2 {
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 0.75rem;
+}
+
+.empty-state p {
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+.error-message {
+  background: #fee;
+  border: 2px solid #f99;
+  border-radius: 5px;
+  padding: 1rem;
+  color: #c33;
+  font-weight: 500;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(102, 126, 234, 0.35);
+}
+
+.btn-danger {
+  background: #ef4444;
+  color: white;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: #dc2626;
+}
+
+.btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .bookings-container {
+    padding: 1rem;
+  }
+
+  .bookings-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .bookings-panel {
+    padding: 1rem;
+  }
+
+  .bookings-table th,
+  .bookings-table td {
+    padding: 0.75rem;
+    font-size: 0.92rem;
+  }
+
+  .route-main {
+    flex-wrap: wrap;
+  }
+}

@@ -106,9 +106,9 @@
         <!-- Book Button -->
         <button 
           class="continue-btn" 
-          [disabled]="!isFormValid()"
+          [disabled]="!isFormValid() || isBooking()"
           (click)="book()">
-          Book
+          {{ isBooking() ? 'Booking...' : 'Book' }}
         </button>
       </div>
     </div>
