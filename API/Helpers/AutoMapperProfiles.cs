@@ -23,6 +23,8 @@ public class AutoMapperProfiles : Profile
                 .Select(bs => bs.Seat.SeatNumber)
                 .ToList()
                 ))
+            .ForMember(dest => dest.DepartureAirportName, o => o.MapFrom(src => src.Flight.DepartureAirport.Name))
+            .ForMember(dest => dest.ArrivalAirportName, o => o.MapFrom(src => src.Flight.ArrivalAirport.Name))
             .ForMember(dest => dest.BaggageTypes,
                 o => o.MapFrom(src => src.BookingBaggages
                     .Select(bs => bs.BaggageType.Type)

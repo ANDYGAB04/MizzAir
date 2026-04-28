@@ -162,15 +162,13 @@ export class SeatSelectionComponent {
   }
 
   private getSelectedBaggageTypeIds(): number[] {
-    const baggageIds = this.baggageService
+    return this.baggageService
       .getAllPassengerBaggages()
       .flatMap(passenger => [
         passenger.cabinBaggage?.baggageTypeId,
         passenger.checkedBaggage?.baggageTypeId
       ])
       .filter((id): id is number => id !== null && id !== undefined);
-
-    return [...new Set(baggageIds)];
   }
 
   book(): void {

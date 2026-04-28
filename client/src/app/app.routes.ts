@@ -5,6 +5,7 @@ import { HomeComponent } from './home/home.component';
 import { FlightSearchComponent } from './flights/search/flight-search.component';
 import { BaggageComponent } from './baggage/baggage.component';
 import { SeatSelectionComponent } from './flights/seats/seat-selection.component';
+import { BookingsListComponent } from './bookings/bookings-list.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -13,5 +14,5 @@ export const routes: Routes = [
   { path: 'flights', component: FlightSearchComponent },
   { path: 'baggage', component: BaggageComponent },
   { path: 'seats', component: SeatSelectionComponent },
-  { path: 'bookings', component: HomeComponent }
+  { path: 'bookings', component: BookingsListComponent }
 ];

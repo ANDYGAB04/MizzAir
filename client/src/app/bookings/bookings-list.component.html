@@ -1,0 +1,65 @@
+<div class="bookings-container">
+  <section class="bookings-header">
+    <h1>Reservations</h1>
+    <p>View and manage all your flight bookings in one place.</p>
+  </section>
+
+  <section class="bookings-panel">
+    <div class="loading-state" *ngIf="isLoading()">Loading your bookings...</div>
+
+    <div class="error-message" *ngIf="error() && !isLoading()">
+      {{ error() }}
+    </div>
+
+    <div class="empty-state" *ngIf="!isLoading() && !error() && !hasBookings()">
+      <h2>No reservations yet</h2>
+      <p>Your future trips will appear here after you complete a booking.</p>
+      <a class="btn btn-primary" routerLink="/flights">Browse Flights</a>
+    </div>
+
+    <div class="bookings-table-wrapper" *ngIf="!isLoading() && !error() && hasBookings()">
+      <table class="bookings-table">
+        <thead>
+          <tr>
+            <th>Origin - Destination</th>
+            <th>Date and hour</th>
+            <th>Baggage</th>
+            <th>Seat</th>
+            <th>Total price</th>
+            <th class="actions-column">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let booking of bookings()">
+            <td class="route-cell">
+              <div class="route-main">
+                <span>{{ booking.departureAirportName }}</span>
+                <span class="route-arrow">-&gt;</span>
+                <span>{{ booking.arrivalAirportName }}</span>
+              </div>
+              <span class="booking-reference">{{ booking.bookingReference }}</span>
+            </td>
+            <td>
+              <div class="date-main">{{ booking.departureTime | date:'dd MMM yyyy' }}</div>
+              <div class="date-secondary">
+                {{ booking.departureTime | date:'HH:mm' }} - {{ booking.arrivalTime | date:'HH:mm' }}
+              </div>
+            </td>
+            <td>{{ getBaggageLabel(booking) }}</td>
+            <td>{{ getSeatLabel(booking) }}</td>
+            <td class="price-cell">{{ booking.totalPrice | number:'1.2-2' }} EUR</td>
+            <td class="actions-column">
+              <button
+                type="button"
+                class="btn btn-danger"
+                [disabled]="deletingBookingId() === booking.id"
+                (click)="deleteBooking(booking.id)">
+                {{ deletingBookingId() === booking.id ? 'Deleting...' : 'Delete' }}
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
