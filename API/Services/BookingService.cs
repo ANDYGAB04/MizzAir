@@ -17,6 +17,9 @@ public class BookingService(DataContext context) : IBookingService
             .Include(b => b.BookingBaggages)
                 .ThenInclude(bb => bb.BaggageType)
             .Include(b => b.Flight)
+                .ThenInclude(f => f.DepartureAirport)
+            .Include(b => b.Flight)
+                .ThenInclude(f => f.ArrivalAirport)
             .ToListAsync();
 
         return bookings;
@@ -73,11 +76,24 @@ public class BookingService(DataContext context) : IBookingService
 
         await ValidateSeatsAvailable(flightId, seatIds);
 
+        decimal baggageTotalPrice = 0;
+
         if (BaggageTypeIds.Count > 0)
         {
-            var validBaggageCount = await context.BaggageTypes.CountAsync(b => BaggageTypeIds.Contains(b.Id));
-            if (validBaggageCount != BaggageTypeIds.Count)
+            var baggageTypes = await context.BaggageTypes
+                .Where(b => BaggageTypeIds.Contains(b.Id))
+                .ToListAsync();
+
+            var validBaggageIds = baggageTypes.Select(b => b.Id).ToHashSet();
+            var invalidBaggageIds = BaggageTypeIds.Where(id => !validBaggageIds.Contains(id)).ToList();
+
+            if (invalidBaggageIds.Count > 0)
+            {
                 throw new Exception("One or more baggage types do not exist");
+            }
+
+            var baggagePriceLookup = baggageTypes.ToDictionary(b => b.Id, b => b.Price);
+            baggageTotalPrice = BaggageTypeIds.Sum(id => baggagePriceLookup[id]);
         }
 
         var user = await context.Users.FindAsync(userId);
@@ -94,7 +110,7 @@ public class BookingService(DataContext context) : IBookingService
             BookingReference = reference,
             BookingDate = DateTime.UtcNow,
             Status = "Confirmed",
-            TotalPrice = flight.Price * seatIds.Count,
+            TotalPrice = (flight.Price * seatIds.Count) + baggageTotalPrice,
             UserId = user.Id,
             FlightId = flightId
         };
@@ -131,6 +147,9 @@ public class BookingService(DataContext context) : IBookingService
             .Include(b => b.BookingBaggages)
                 .ThenInclude(bb => bb.BaggageType)
             .Include(b => b.Flight)
+                .ThenInclude(f => f.DepartureAirport)
+            .Include(b => b.Flight)
+                .ThenInclude(f => f.ArrivalAirport)
             .FirstOrDefaultAsync(b => b.Id == booking.Id);
 
         return bookingWithIncludes ?? booking;
