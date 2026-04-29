@@ -17,6 +17,8 @@ namespace API.Migrations
                 nullable: false,
                 defaultValue: "");
 
+            migrationBuilder.Sql("UPDATE Aircrafts SET RegistrationNumber = 'YR-MZ' || Id WHERE RegistrationNumber = ''");
+
             migrationBuilder.CreateIndex(
                 name: "IX_Aircrafts_RegistrationNumber",
                 table: "Aircrafts",

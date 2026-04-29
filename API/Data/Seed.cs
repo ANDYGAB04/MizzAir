@@ -88,9 +88,9 @@ public class Seed
 
         var aircraft = new List<Aircraft>
         {
-            new() { Model = "Boeing 737", TotalSeats = 189, SeatRows = 27, SeatsPerRow = 7 },
-            new() { Model = "Airbus A320", TotalSeats = 180, SeatRows = 30, SeatsPerRow = 6 },
-            new() { Model = "Airbus A380", TotalSeats = 525, SeatRows = 75, SeatsPerRow = 7 }
+            new() { Model = "Boeing 737", RegistrationNumber = "YR-MZA", TotalSeats = 189, SeatRows = 27, SeatsPerRow = 7 },
+            new() { Model = "Airbus A320", RegistrationNumber = "YR-MZB", TotalSeats = 180, SeatRows = 30, SeatsPerRow = 6 },
+            new() { Model = "Airbus A380", RegistrationNumber = "YR-MZC", TotalSeats = 525, SeatRows = 75, SeatsPerRow = 7 }
         };
 
         foreach (var item in aircraft)
