@@ -13,12 +13,14 @@ public class PassengerService : IPassengerService
 {
     private readonly UserManager<User> _userManager;
     private readonly DataContext _context;
+    private readonly IBookingService _bookingService;
     private readonly IMapper _mapper;
 
-    public PassengerService(UserManager<User> userManager, DataContext context, IMapper mapper)
+    public PassengerService(UserManager<User> userManager, DataContext context, IBookingService bookingService, IMapper mapper)
     {
         _userManager = userManager;
         _context = context;
+        _bookingService = bookingService;
         _mapper = mapper;
     }
 
@@ -37,7 +39,8 @@ public class PassengerService : IPassengerService
             passengersQuery = passengersQuery.Where(p => 
                 p.FirstName.ToLower().Contains(searchTerm) ||
                 p.LastName.ToLower().Contains(searchTerm) ||
-                p.Email.ToLower().Contains(searchTerm));
+                p.Email.ToLower().Contains(searchTerm) ||
+                (p.PhoneNumber != null && p.PhoneNumber.ToLower().Contains(searchTerm)));
         }
 
         // Apply flight filter
@@ -50,6 +53,9 @@ public class PassengerService : IPassengerService
         // Apply sorting
         passengersQuery = filterDto.SortBy?.ToLower() switch
         {
+            "fullname" => filterDto.IsDescending
+                ? passengersQuery.OrderByDescending(p => p.LastName).ThenByDescending(p => p.FirstName)
+                : passengersQuery.OrderBy(p => p.LastName).ThenBy(p => p.FirstName),
             "firstname" => filterDto.IsDescending 
                 ? passengersQuery.OrderByDescending(p => p.FirstName)
                 : passengersQuery.OrderBy(p => p.FirstName),
@@ -59,6 +65,9 @@ public class PassengerService : IPassengerService
             "email" => filterDto.IsDescending
                 ? passengersQuery.OrderByDescending(p => p.Email)
                 : passengersQuery.OrderBy(p => p.Email),
+            "phone" => filterDto.IsDescending
+                ? passengersQuery.OrderByDescending(p => p.PhoneNumber)
+                : passengersQuery.OrderBy(p => p.PhoneNumber),
             "totalbookings" => filterDto.IsDescending
                 ? passengersQuery.OrderByDescending(p => p.Bookings.Count)
                 : passengersQuery.OrderBy(p => p.Bookings.Count),
@@ -196,5 +205,32 @@ public class PassengerService : IPassengerService
             await transaction.RollbackAsync();
             throw;
         }
+    }
+
+    public async Task<IEnumerable<BookingDto>> GetPassengerHistoryAsync(int passengerId)
+    {
+        var bookings = await _bookingService.GetBookingList(passengerId);
+
+        // Keep the newest bookings first for the staff/admin passenger profile view.
+        var orderedBookings = bookings.OrderByDescending(b => b.BookingDate).ToList();
+
+        return _mapper.Map<IEnumerable<BookingDto>>(orderedBookings);
+    }
+
+    public async Task<PassengerProfileDto?> GetPassengerProfileAsync(int passengerId)
+    {
+        var passenger = await GetPassengerByIdAsync(passengerId);
+        if (passenger == null)
+        {
+            return null;
+        }
+
+        var history = await GetPassengerHistoryAsync(passengerId);
+
+        return new PassengerProfileDto
+        {
+            Passenger = passenger,
+            Reservations = history.ToList()
+        };
     }
 }

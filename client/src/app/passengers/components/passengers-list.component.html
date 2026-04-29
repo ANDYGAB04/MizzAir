@@ -1,0 +1,84 @@
+<div class="passengers-container">
+  <section class="passengers-header">
+    <h1>Passenger Management</h1>
+    <p>Search and review passengers. Click a row for profile and booking history.</p>
+  </section>
+
+  <section class="passengers-panel">
+    <div class="search-row">
+      <div class="search-group">
+        <label for="search">Search</label>
+        <input
+          id="search"
+          type="text"
+          class="form-control"
+          placeholder="Name, email, or phone..."
+          [ngModel]="searchTerm()"
+          (ngModelChange)="searchTerm.set($event)"
+        />
+      </div>
+
+      <div class="search-actions">
+        <button class="btn btn-primary" type="button" (click)="onSearch()">
+          Search
+        </button>
+      </div>
+    </div>
+
+    <div class="loading-state" *ngIf="isLoading()">
+      Loading passengers...
+    </div>
+
+    <div class="error-message" *ngIf="error() && !isLoading()">
+      {{ error() }}
+    </div>
+
+    <div class="empty-state" *ngIf="!isLoading() && !error() && passengers().length === 0">
+      <h2>No passengers found</h2>
+      <p>Try a different search term.</p>
+    </div>
+
+    <div class="table-wrapper" *ngIf="!isLoading() && !error() && passengers().length > 0">
+      <table class="passengers-table">
+        <thead>
+          <tr>
+            <th class="sortable" (click)="setSort('fullname')">
+              Full Name <span class="sort-indicator">{{ getSortIndicator('fullname') }}</span>
+            </th>
+            <th class="sortable" (click)="setSort('email')">
+              Email <span class="sort-indicator">{{ getSortIndicator('email') }}</span>
+            </th>
+            <th class="sortable" (click)="setSort('phone')">
+              Phone <span class="sort-indicator">{{ getSortIndicator('phone') }}</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let p of passengers()"
+            class="clickable-row"
+            (click)="openPassenger(p.id)"
+          >
+            <td>{{ passengerFullName(p) }}</td>
+            <td>{{ p.email }}</td>
+            <td>{{ p.phoneNumber ?? '-' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pagination" *ngIf="pagination()">
+      <button class="btn btn-secondary" type="button" (click)="prevPage()" [disabled]="!hasPrevious()">
+        Previous
+      </button>
+      <div class="pagination-info">
+        Page {{ pagination()?.currentPage }} of {{ pagination()?.totalPages }} ({{ pagination()?.totalCount }}
+        total)
+      </div>
+      <button class="btn btn-secondary" type="button" (click)="nextPage()" [disabled]="!hasNext()">
+        Next
+      </button>
+    </div>
+  </section>
+</div>
+

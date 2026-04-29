@@ -15,6 +15,10 @@
             <a routerLink="/bookings" routerLinkActive="active" class="nav-link" (click)="closeMenu()">
                 My Bookings
             </a>
+
+            <a routerLink="/admin/passengers" routerLinkActive="active" class="nav-link" (click)="closeMenu()"
+                *ngIf="authService.hasStaffOrAdmin()">
+                Passengers
             <a routerLink="/account" routerLinkActive="active" class="nav-link" (click)="closeMenu()"
                 *ngIf="authService.currentUser()">
                 My Account
