@@ -1,0 +1,306 @@
+.account-page {
+  min-height: calc(100vh - 70px);
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 2rem;
+}
+
+.account-header,
+.account-panel {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.account-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.account-header h1 {
+  font-size: 2.5rem;
+  color: #333;
+  margin: 0 0 0.75rem;
+  font-weight: 700;
+}
+
+.account-header p {
+  margin: 0;
+  color: #666;
+  font-size: 1.05rem;
+  max-width: 780px;
+}
+
+.account-panel {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.account-content {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.info-card,
+.edit-card,
+.danger-card {
+  border: 1px solid #e7ebf3;
+  border-radius: 10px;
+  padding: 1.5rem;
+  background: #fff;
+}
+
+.card-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.card-heading h2 {
+  margin: 0 0 0.35rem;
+  font-size: 1.4rem;
+  color: #333;
+}
+
+.card-heading p {
+  margin: 0;
+  color: #666;
+}
+
+.badge {
+  background: rgba(102, 126, 234, 0.12);
+  color: #667eea;
+  border-radius: 999px;
+  padding: 0.45rem 0.8rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.info-grid,
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.info-item,
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-item-wide {
+  grid-column: 1 / -1;
+}
+
+.info-label {
+  color: #7d8596;
+  font-size: 0.9rem;
+  margin-bottom: 0.4rem;
+}
+
+.info-value {
+  color: #333;
+  font-size: 1rem;
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.account-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.form-control {
+  padding: 12px 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-control.is-invalid {
+  border-color: #dc3545;
+}
+
+.invalid-feedback,
+.form-error {
+  color: #dc3545;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.form-section h3 {
+  margin: 0 0 0.35rem;
+  color: #333;
+  font-size: 1.05rem;
+}
+
+.form-section p {
+  margin: 0;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.form-actions,
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.danger-card {
+  border-color: #f5c2c7;
+  background: linear-gradient(180deg, #fff 0%, #fff7f7 100%);
+}
+
+.loading-state {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.error-message {
+  background: #fee;
+  border: 2px solid #f99;
+  border-radius: 5px;
+  padding: 1rem;
+  color: #c33;
+  font-weight: 500;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(102, 126, 234, 0.35);
+}
+
+.btn-secondary {
+  background: white;
+  color: #667eea;
+  border: 2px solid #667eea;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #f9f9f9;
+  transform: translateY(-2px);
+}
+
+.btn-danger {
+  background: #ef4444;
+  color: white;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: #dc2626;
+}
+
+.btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 200;
+}
+
+.dialog {
+  width: 100%;
+  max-width: 460px;
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.2);
+}
+
+.dialog h3 {
+  margin: 0 0 0.75rem;
+  color: #333;
+}
+
+.dialog p {
+  margin: 0 0 1.5rem;
+  color: #666;
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .account-page {
+    padding: 1rem;
+  }
+
+  .account-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .account-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .account-panel,
+  .info-card,
+  .edit-card,
+  .danger-card {
+    padding: 1rem;
+  }
+
+  .info-grid,
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card-heading,
+  .form-actions,
+  .dialog-actions {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+    text-align: center;
+  }
+}
