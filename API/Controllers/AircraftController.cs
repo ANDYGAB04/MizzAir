@@ -6,6 +6,13 @@ namespace API.Controllers
 {
     public class AircraftController(IAircraftService aircraftService) : BaseApiController
     {
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<AircraftDto>>> GetAircraft()
+        {
+            var aircraft = await aircraftService.GetAircraft();
+            return Ok(aircraft);
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<AircraftDto>> GetAircraftById(int id)
         {
