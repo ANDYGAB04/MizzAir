@@ -42,7 +42,10 @@ export class AccountService {
 
   deleteAccount(): Observable<DeleteAccountResult> {
     return this.http.delete<DeleteAccountResult>(this.baseUrl + 'account', {
-      headers: this.getAuthHeaders()
+      headers: this.getAuthHeaders(),
+      body: {
+        confirm: true
+      }
     });
   }
 
