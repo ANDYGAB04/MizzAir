@@ -15,6 +15,28 @@ public class StaffService(
     private const string StaffRole = "Staff";
     private const string AdminRole = "Admin";
 
+    public async Task<IReadOnlyList<StaffAccountDto>> GetStaffAccountsAsync()
+    {
+        var staffUsers = await userManager.Users
+            .Include(u => u.UserRoles)
+            .ThenInclude(ur => ur.Role)
+            .Where(u =>
+                !u.IsDeleted &&
+                u.UserRoles.Any(ur => ur.Role.Name == StaffRole) &&
+                !u.UserRoles.Any(ur => ur.Role.Name == AdminRole))
+            .OrderBy(u => u.LastName)
+            .ThenBy(u => u.FirstName)
+            .ToListAsync();
+
+        var staffDtos = new List<StaffAccountDto>();
+        foreach (var staff in staffUsers)
+        {
+            staffDtos.Add(await CreateStaffDto(staff));
+        }
+
+        return staffDtos;
+    }
+
     public async Task<CreateStaffAccountResultDto> CreateStaffAccountAsync(CreateStaffAccountDto dto)
     {
         var email = dto.Email.Trim().ToLower();

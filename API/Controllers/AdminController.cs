@@ -53,6 +53,14 @@ public class AdminController(
     }
 
     [Authorize(Policy = "RequireAdminRole")]
+    [HttpGet("staff")]
+    public async Task<ActionResult<IReadOnlyList<StaffAccountDto>>> GetStaffAccounts()
+    {
+        var staff = await staffService.GetStaffAccountsAsync();
+        return Ok(staff);
+    }
+
+    [Authorize(Policy = "RequireAdminRole")]
     [HttpPost("staff")]
     public async Task<ActionResult<StaffAccountDto>> CreateStaffAccount([FromBody] CreateStaffAccountDto dto)
     {

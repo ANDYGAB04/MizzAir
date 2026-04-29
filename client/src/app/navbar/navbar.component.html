@@ -20,6 +20,10 @@
                 *ngIf="authService.hasStaffOrAdmin()">
                 Passengers
             </a>
+            <a routerLink="/admin/staff" routerLinkActive="active" class="nav-link" (click)="closeMenu()"
+                *ngIf="authService.hasAdmin()">
+                Staff
+            </a>
             <a routerLink="/account" routerLinkActive="active" class="nav-link" (click)="closeMenu()"
                 *ngIf="authService.currentUser()">
                 My Account

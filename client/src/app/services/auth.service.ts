@@ -52,6 +52,10 @@ export class AuthService {
     return roles.includes('Admin') || roles.includes('Staff');
   }
 
+  hasAdmin(): boolean {
+    return this.getRoles().includes('Admin');
+  }
+
   private getUserFromStorage(): User | null {
     const storedUser = localStorage.getItem('user');
     return storedUser ? JSON.parse(storedUser) : null;

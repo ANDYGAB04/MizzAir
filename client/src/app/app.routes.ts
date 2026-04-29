@@ -9,6 +9,7 @@ import { BookingsListComponent } from './bookings/bookings-list.component';
 import { PassengersListComponent } from './passengers/components/passengers-list.component';
 import { PassengerProfileComponent } from './passengers/components/passenger-profile.component';
 import { MyAccountComponent } from './account/my-account.component';
+import { StaffListComponent } from './admin/staff/staff-list.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -20,5 +21,6 @@ export const routes: Routes = [
   { path: 'bookings', component: BookingsListComponent },
   { path: 'admin/passengers', component: PassengersListComponent },
   { path: 'admin/passengers/:id', component: PassengerProfileComponent },
+  { path: 'admin/staff', component: StaffListComponent },
   { path: 'account', component: MyAccountComponent }
 ];

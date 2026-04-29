@@ -1,0 +1,160 @@
+<div class="admin-page">
+  <section class="admin-header">
+    <div>
+      <h1>Admin Panel</h1>
+      <p>Manage operational users and passenger records.</p>
+    </div>
+
+    <button class="btn btn-primary" type="button" (click)="openAddModal()">Add Staff</button>
+  </section>
+
+  <nav class="admin-tabs" aria-label="Admin sections">
+    <a routerLink="/admin/passengers" routerLinkActive="active" class="tab-link">Passengers</a>
+    <a routerLink="/admin/staff" routerLinkActive="active" class="tab-link">Staff</a>
+  </nav>
+
+  <section class="admin-panel">
+    <div class="panel-toolbar">
+      <div>
+        <h2>Staff Accounts</h2>
+        <p>{{ staffCount() }} active staff account{{ staffCount() === 1 ? '' : 's' }}</p>
+      </div>
+
+      <button class="btn btn-secondary" type="button" (click)="loadStaff()" [disabled]="isLoading()">
+        Refresh
+      </button>
+    </div>
+
+    <div class="loading-state" *ngIf="isLoading()">Loading staff accounts...</div>
+
+    <div class="error-message" *ngIf="error() && !isLoading()">
+      {{ error() }}
+    </div>
+
+    <div class="empty-state" *ngIf="!isLoading() && !error() && staff().length === 0">
+      <h2>No staff accounts</h2>
+      <p>Add the first staff user to grant operational access.</p>
+    </div>
+
+    <div class="table-wrapper" *ngIf="!isLoading() && !error() && staff().length > 0">
+      <table class="staff-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Location</th>
+            <th>Roles</th>
+            <th class="actions-column">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let member of staff()">
+            <td>
+              <div class="primary-text">{{ fullName(member) }}</div>
+              <div class="secondary-text">ID {{ member.id }}</div>
+            </td>
+            <td>{{ member.email }}</td>
+            <td>{{ member.city || '-' }}{{ member.country ? ', ' + member.country : '' }}</td>
+            <td>
+              <span class="role-badge" *ngFor="let role of member.roles">{{ role }}</span>
+            </td>
+            <td class="actions-cell">
+              <button class="btn btn-danger" type="button" (click)="requestDelete(member)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<div class="modal-backdrop" *ngIf="isAddModalOpen()" (click)="closeAddModal()">
+  <section class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="addStaffTitle" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2 id="addStaffTitle">Add Staff</h2>
+      <button class="icon-button" type="button" aria-label="Close" (click)="closeAddModal()">&times;</button>
+    </div>
+
+    <form [formGroup]="staffForm" class="staff-form" (ngSubmit)="createStaff()">
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="firstName">First name</label>
+          <input id="firstName" class="form-control" type="text" formControlName="firstName" />
+          <div class="invalid-feedback" *ngIf="staffForm.get('firstName')?.invalid && staffForm.get('firstName')?.touched">
+            First name is required.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="lastName">Last name</label>
+          <input id="lastName" class="form-control" type="text" formControlName="lastName" />
+          <div class="invalid-feedback" *ngIf="staffForm.get('lastName')?.invalid && staffForm.get('lastName')?.touched">
+            Last name is required.
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input id="email" class="form-control" type="email" formControlName="email" />
+        <div class="invalid-feedback" *ngIf="staffForm.get('email')?.invalid && staffForm.get('email')?.touched">
+          Valid email is required.
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="city">City</label>
+          <input id="city" class="form-control" type="text" formControlName="city" />
+        </div>
+
+        <div class="form-group">
+          <label for="country">Country</label>
+          <input id="country" class="form-control" type="text" formControlName="country" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="address">Address</label>
+        <input id="address" class="form-control" type="text" formControlName="address" />
+        <div class="invalid-feedback" *ngIf="staffForm.get('address')?.invalid && staffForm.get('address')?.touched">
+          Address must be at least 5 characters.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input id="password" class="form-control" type="password" formControlName="password" />
+        <div class="invalid-feedback" *ngIf="staffForm.get('password')?.invalid && staffForm.get('password')?.touched">
+          Password must be 4 to 8 characters.
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-secondary" type="button" (click)="closeAddModal()" [disabled]="isSaving()">
+          Cancel
+        </button>
+        <button class="btn btn-primary" type="submit" [disabled]="isSaving()">
+          {{ isSaving() ? 'Saving...' : 'Create Staff' }}
+        </button>
+      </div>
+    </form>
+  </section>
+</div>
+
+<div class="modal-backdrop" *ngIf="staffToDelete()" (click)="cancelDelete()">
+  <section class="confirm-panel" role="dialog" aria-modal="true" aria-labelledby="deleteStaffTitle" (click)="$event.stopPropagation()">
+    <h2 id="deleteStaffTitle">Delete staff account</h2>
+    <p>
+      Delete {{ fullName(staffToDelete()!) }}? The account will be disabled and hidden from this list.
+    </p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" type="button" (click)="cancelDelete()" [disabled]="isDeleting()">
+        Cancel
+      </button>
+      <button class="btn btn-danger" type="button" (click)="deleteStaff()" [disabled]="isDeleting()">
+        {{ isDeleting() ? 'Deleting...' : 'Delete' }}
+      </button>
+    </div>
+  </section>
+</div>
