@@ -47,6 +47,8 @@ public class Seed
             FirstName = "admin",
             LastName = "admin",
             Email = "admin@gmail.com",
+            City = string.Empty,
+            Country = string.Empty,
             Address = "",
             UserName = "admin"
         };

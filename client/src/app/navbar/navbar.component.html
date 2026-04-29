@@ -19,6 +19,9 @@
             <a routerLink="/admin/passengers" routerLinkActive="active" class="nav-link" (click)="closeMenu()"
                 *ngIf="authService.hasStaffOrAdmin()">
                 Passengers
+            <a routerLink="/account" routerLinkActive="active" class="nav-link" (click)="closeMenu()"
+                *ngIf="authService.currentUser()">
+                My Account
             </a>
         </div>
 
@@ -31,6 +34,9 @@
         <!-- Show User email and Logout button when logged in -->
         <div class="user-section" *ngIf="authService.currentUser()">
             <span class="user-email">{{ authService.currentUser()?.email }}</span>
+            <a routerLink="/account" routerLinkActive="active" class="nav-link nav-link-btn" (click)="closeMenu()">
+                Account
+            </a>
             <button class="nav-link nav-link-btn logout-btn" (click)="logout()">
                 Logout
             </button>
