@@ -216,4 +216,21 @@ public class PassengerService : IPassengerService
 
         return _mapper.Map<IEnumerable<BookingDto>>(orderedBookings);
     }
+
+    public async Task<PassengerProfileDto?> GetPassengerProfileAsync(int passengerId)
+    {
+        var passenger = await GetPassengerByIdAsync(passengerId);
+        if (passenger == null)
+        {
+            return null;
+        }
+
+        var history = await GetPassengerHistoryAsync(passengerId);
+
+        return new PassengerProfileDto
+        {
+            Passenger = passenger,
+            Reservations = history.ToList()
+        };
+    }
 }

@@ -48,6 +48,19 @@ public class PassengerController : BaseApiController
         return Ok(history);
     }
 
+    [HttpGet("{id}/profile")]
+    public async Task<ActionResult<PassengerProfileDto>> GetPassengerProfile(int id)
+    {
+        var profile = await _passengerService.GetPassengerProfileAsync(id);
+
+        if (profile == null)
+        {
+            return NotFound($"Passenger with ID {id} not found");
+        }
+
+        return Ok(profile);
+    }
+
     [Authorize(Policy = "RequireAdminRole")]
     [HttpDelete("{id}")]
     public async Task<ActionResult<DeletePassengerResultDto>> DeletePassenger(int id)
