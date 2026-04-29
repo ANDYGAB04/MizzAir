@@ -1,4 +1,7 @@
 using System;
+using API.DTOs;
+using API.Extensions;
+using API.Interface;
 using API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -7,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers;
 
-public class AdminController(UserManager<User> userManager) : BaseApiController
+public class AdminController(UserManager<User> userManager, INotificationService notificationService) : BaseApiController
 {
     [Authorize(Policy = "RequireAdminRole")]
     [HttpGet("users-with-roles")]
@@ -23,5 +26,26 @@ public class AdminController(UserManager<User> userManager) : BaseApiController
                 }).ToListAsync();
 
         return Ok(users);
+    }
+
+    [Authorize(Policy = "RequireAdminRole")]
+    [HttpPost("broadcast-announcement")]
+    public async Task<ActionResult<AdminAnnouncementResultDto>> BroadcastAnnouncement([FromBody] AdminAnnouncementDto dto)
+    {
+        if (string.IsNullOrWhiteSpace(dto.Message))
+        {
+            return BadRequest("Message is required");
+        }
+
+        var adminUserId = User.GetUserId();
+        var type = string.IsNullOrWhiteSpace(dto.Type) ? "Announcement" : dto.Type;
+        var created = await notificationService.BroadcastAnnouncement(adminUserId, dto.Message, type);
+
+        return Ok(new AdminAnnouncementResultDto
+        {
+            NotificationsCreated = created,
+            CreatedAt = DateTime.UtcNow,
+            Type = string.IsNullOrWhiteSpace(type) ? "Announcement" : type.Trim()
+        });
     }
 }
