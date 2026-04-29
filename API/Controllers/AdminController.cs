@@ -10,7 +10,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers;
 
-public class AdminController(UserManager<User> userManager, INotificationService notificationService) : BaseApiController
+public class AdminController(
+    UserManager<User> userManager,
+    INotificationService notificationService,
+    IStaffService staffService) : BaseApiController
 {
     [Authorize(Policy = "RequireAdminRole")]
     [HttpGet("users-with-roles")]
@@ -47,5 +50,38 @@ public class AdminController(UserManager<User> userManager, INotificationService
             CreatedAt = DateTime.UtcNow,
             Type = string.IsNullOrWhiteSpace(type) ? "Announcement" : type.Trim()
         });
+    }
+
+    [Authorize(Policy = "RequireAdminRole")]
+    [HttpPost("staff")]
+    public async Task<ActionResult<StaffAccountDto>> CreateStaffAccount([FromBody] CreateStaffAccountDto dto)
+    {
+        var result = await staffService.CreateStaffAccountAsync(dto);
+
+        if (!result.Succeeded)
+        {
+            return BadRequest(result.Errors);
+        }
+
+        return Created($"/api/admin/staff/{result.Staff!.Id}", result.Staff);
+    }
+
+    [Authorize(Policy = "RequireAdminRole")]
+    [HttpDelete("staff/{id}")]
+    public async Task<ActionResult<DeleteStaffAccountResultDto>> DeleteStaffAccount(int id)
+    {
+        var result = await staffService.DeleteStaffAccountAsync(id);
+
+        if (result == null)
+        {
+            return NotFound($"Staff account with ID {id} not found");
+        }
+
+        if (!result.Succeeded)
+        {
+            return BadRequest(result.Errors);
+        }
+
+        return Ok(result);
     }
 }
