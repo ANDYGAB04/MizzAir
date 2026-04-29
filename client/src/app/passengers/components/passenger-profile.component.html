@@ -1,0 +1,96 @@
+<div class="passengers-container">
+  <section class="passengers-header">
+    <h1>Passenger Profile</h1>
+    <p>Passenger details and booking history.</p>
+  </section>
+
+  <section class="passengers-panel">
+    <div class="back-row">
+      <a class="btn btn-secondary" routerLink="/admin/passengers">Back to list</a>
+    </div>
+
+    <div class="loading-state" *ngIf="isLoading()">
+      Loading passenger...
+    </div>
+
+    <div class="error-message" *ngIf="error() && !isLoading()">
+      {{ error() }}
+    </div>
+
+    <ng-container *ngIf="!isLoading() && !error() && passenger()">
+      <div class="profile-card">
+        <h2 class="profile-name">{{ passengerFullName(passenger()!) }}</h2>
+        <div class="profile-grid">
+          <div class="profile-item">
+            <div class="label">Email</div>
+            <div class="value">{{ passenger()?.email }}</div>
+          </div>
+          <div class="profile-item">
+            <div class="label">Phone</div>
+            <div class="value">{{ passenger()?.phoneNumber ?? '-' }}</div>
+          </div>
+          <div class="profile-item">
+            <div class="label">Address</div>
+            <div class="value">{{ passenger()?.address }}</div>
+          </div>
+          <div class="profile-item">
+            <div class="label">Total bookings</div>
+            <div class="value">{{ passenger()?.totalBookings }}</div>
+          </div>
+          <div class="profile-item">
+            <div class="label">Last booking</div>
+            <div class="value">
+              {{ passenger()?.lastBookingDate ? (passenger()?.lastBookingDate | date : 'dd MMM yyyy') : '-' }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="history-section">
+        <h2>Booking History</h2>
+
+        <div class="empty-state" *ngIf="!hasHistory()">
+          <h3>No bookings yet</h3>
+          <p>This passenger has no reservation history.</p>
+        </div>
+
+        <div class="table-wrapper" *ngIf="hasHistory()">
+          <table class="passengers-table">
+            <thead>
+              <tr>
+                <th>Reference</th>
+                <th>Date</th>
+                <th>Route</th>
+                <th>Seats</th>
+                <th>Baggage</th>
+                <th>Status</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let booking of history()">
+                <td class="booking-reference">{{ booking.bookingReference }}</td>
+                <td>
+                  <div class="date-main">{{ booking.departureTime | date : 'dd MMM yyyy' }}</div>
+                  <div class="date-secondary">{{ booking.departureTime | date : 'HH:mm' }}</div>
+                </td>
+                <td>
+                  <div class="route-main">
+                    <span>{{ booking.departureAirportName }}</span>
+                    <span class="route-arrow">-&gt;</span>
+                    <span>{{ booking.arrivalAirportName }}</span>
+                  </div>
+                </td>
+                <td>{{ getSeatLabel(booking) }}</td>
+                <td>{{ getBaggageLabel(booking) }}</td>
+                <td>{{ booking.status }}</td>
+                <td class="price-cell">{{ booking.totalPrice | number : '1.2-2' }} EUR</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </ng-container>
+  </section>
+</div>
+

@@ -2,7 +2,8 @@ namespace API.DTOs;
 
 public class PassengerFilterDto
 {
-    public string SearchTerm { get; set; }
+    // Nullable so `GET /api/passenger` works when no search term is provided.
+    public string? SearchTerm { get; set; }
     public int? FlightId { get; set; }
     public string SortBy { get; set; } = "LastName";
     public bool IsDescending { get; set; } = false;

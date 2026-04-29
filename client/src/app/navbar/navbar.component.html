@@ -15,6 +15,11 @@
             <a routerLink="/bookings" routerLinkActive="active" class="nav-link" (click)="closeMenu()">
                 My Bookings
             </a>
+
+            <a routerLink="/admin/passengers" routerLinkActive="active" class="nav-link" (click)="closeMenu()"
+                *ngIf="authService.hasStaffOrAdmin()">
+                Passengers
+            </a>
         </div>
 
         <!-- Show Login button when not logged in -->

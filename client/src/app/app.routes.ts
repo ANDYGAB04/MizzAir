@@ -6,6 +6,8 @@ import { FlightSearchComponent } from './flights/search/flight-search.component'
 import { BaggageComponent } from './baggage/baggage.component';
 import { SeatSelectionComponent } from './flights/seats/seat-selection.component';
 import { BookingsListComponent } from './bookings/bookings-list.component';
+import { PassengersListComponent } from './passengers/components/passengers-list.component';
+import { PassengerProfileComponent } from './passengers/components/passenger-profile.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -14,5 +16,7 @@ export const routes: Routes = [
   { path: 'flights', component: FlightSearchComponent },
   { path: 'baggage', component: BaggageComponent },
   { path: 'seats', component: SeatSelectionComponent },
-  { path: 'bookings', component: BookingsListComponent }
+  { path: 'bookings', component: BookingsListComponent },
+  { path: 'admin/passengers', component: PassengersListComponent },
+  { path: 'admin/passengers/:id', component: PassengerProfileComponent },
 ];

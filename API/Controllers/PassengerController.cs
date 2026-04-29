@@ -41,6 +41,13 @@ public class PassengerController : BaseApiController
         return Ok(passenger);
     }
 
+    [HttpGet("{id}/history")]
+    public async Task<ActionResult<IEnumerable<BookingDto>>> GetPassengerHistory(int id)
+    {
+        var history = await _passengerService.GetPassengerHistoryAsync(id);
+        return Ok(history);
+    }
+
     [Authorize(Policy = "RequireAdminRole")]
     [HttpDelete("{id}")]
     public async Task<ActionResult<DeletePassengerResultDto>> DeletePassenger(int id)
