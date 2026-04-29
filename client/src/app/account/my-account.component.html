@@ -1,0 +1,199 @@
+<div class="account-page">
+  <section class="account-header">
+    <div>
+      <h1>My Account</h1>
+      <p>Review your personal details, update your profile information, or permanently delete your account.</p>
+    </div>
+
+    <button type="button" class="btn btn-primary" *ngIf="!isEditOpen()" (click)="openEdit()">
+      Update Details
+    </button>
+  </section>
+
+  <section class="account-panel">
+    <div class="loading-state" *ngIf="isLoading()">Loading your account details...</div>
+
+    <div class="error-message" *ngIf="error() && !isLoading()">
+      {{ error() }}
+    </div>
+
+    <div class="account-content" *ngIf="!isLoading() && !error()">
+      <article class="info-card">
+        <div class="card-heading">
+          <h2>Profile Details</h2>
+          <span class="badge">Active account</span>
+        </div>
+
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">First name</span>
+            <span class="info-value">{{ authService.currentUser()?.firstName }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Last name</span>
+            <span class="info-value">{{ authService.currentUser()?.lastname }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Email</span>
+            <span class="info-value">{{ authService.currentUser()?.email }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">City</span>
+            <span class="info-value">{{ authService.currentUser()?.city }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Country</span>
+            <span class="info-value">{{ authService.currentUser()?.country }}</span>
+          </div>
+          <div class="info-item info-item-wide">
+            <span class="info-label">Address</span>
+            <span class="info-value">{{ authService.currentUser()?.address }}</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="edit-card" *ngIf="isEditOpen()">
+        <div class="card-heading">
+          <div>
+            <h2>Update Details</h2>
+            <p>You can update your address details and optionally change your password.</p>
+          </div>
+        </div>
+
+        <form [formGroup]="accountForm" (ngSubmit)="saveChanges()" class="account-form">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="city" class="form-label">City</label>
+              <input
+                id="city"
+                type="text"
+                class="form-control"
+                formControlName="city"
+                placeholder="Enter your city"
+                [class.is-invalid]="accountForm.get('city')?.invalid && accountForm.get('city')?.touched" />
+              <div class="invalid-feedback" *ngIf="accountForm.get('city')?.invalid && accountForm.get('city')?.touched">
+                <span *ngIf="accountForm.get('city')?.errors?.['minlength']">City must be at least 2 characters.</span>
+                <span *ngIf="accountForm.get('city')?.errors?.['maxlength']">City cannot exceed 50 characters.</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="country" class="form-label">Country</label>
+              <input
+                id="country"
+                type="text"
+                class="form-control"
+                formControlName="country"
+                placeholder="Enter your country"
+                [class.is-invalid]="accountForm.get('country')?.invalid && accountForm.get('country')?.touched" />
+              <div class="invalid-feedback" *ngIf="accountForm.get('country')?.invalid && accountForm.get('country')?.touched">
+                <span *ngIf="accountForm.get('country')?.errors?.['minlength']">Country must be at least 2 characters.</span>
+                <span *ngIf="accountForm.get('country')?.errors?.['maxlength']">Country cannot exceed 50 characters.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="address" class="form-label">Address</label>
+            <input
+              id="address"
+              type="text"
+              class="form-control"
+              formControlName="address"
+              placeholder="Enter your address"
+              [class.is-invalid]="accountForm.get('address')?.invalid && accountForm.get('address')?.touched" />
+            <div class="invalid-feedback" *ngIf="accountForm.get('address')?.invalid && accountForm.get('address')?.touched">
+              <span *ngIf="accountForm.get('address')?.errors?.['minlength']">Address must be at least 5 characters.</span>
+              <span *ngIf="accountForm.get('address')?.errors?.['maxlength']">Address cannot exceed 100 characters.</span>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Change Password</h3>
+            <p>Leave these fields empty if you only want to update your address details.</p>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="currentPassword" class="form-label">Current Password</label>
+              <input
+                id="currentPassword"
+                type="password"
+                class="form-control"
+                formControlName="currentPassword"
+                placeholder="Enter current password"
+                [class.is-invalid]="accountForm.get('currentPassword')?.invalid && accountForm.get('currentPassword')?.touched" />
+              <div class="invalid-feedback" *ngIf="accountForm.get('currentPassword')?.invalid && accountForm.get('currentPassword')?.touched">
+                <span *ngIf="accountForm.get('currentPassword')?.errors?.['minlength']">Password must be at least 4 characters.</span>
+                <span *ngIf="accountForm.get('currentPassword')?.errors?.['maxlength']">Password cannot exceed 8 characters.</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="newPassword" class="form-label">New Password</label>
+              <input
+                id="newPassword"
+                type="password"
+                class="form-control"
+                formControlName="newPassword"
+                placeholder="Enter new password"
+                [class.is-invalid]="accountForm.get('newPassword')?.invalid && accountForm.get('newPassword')?.touched" />
+              <div class="invalid-feedback" *ngIf="accountForm.get('newPassword')?.invalid && accountForm.get('newPassword')?.touched">
+                <span *ngIf="accountForm.get('newPassword')?.errors?.['minlength']">Password must be at least 4 characters.</span>
+                <span *ngIf="accountForm.get('newPassword')?.errors?.['maxlength']">Password cannot exceed 8 characters.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-error" *ngIf="accountForm.errors?.['addressGroupIncomplete'] && accountForm.touched">
+            City, country and address are all required when updating address details.
+          </div>
+          <div class="form-error" *ngIf="accountForm.errors?.['passwordPairRequired'] && accountForm.touched">
+            Current password and new password are both required when changing your password.
+          </div>
+          <div class="form-error" *ngIf="accountForm.errors?.['samePassword'] && accountForm.touched">
+            New password must be different from current password.
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" (click)="cancelEdit()" [disabled]="isSaving()">
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-primary" [disabled]="isSaving()">
+              {{ isSaving() ? 'Saving...' : 'Save Changes' }}
+            </button>
+          </div>
+        </form>
+      </article>
+
+      <article class="danger-card">
+        <div class="card-heading">
+          <div>
+            <h2>Delete Account</h2>
+            <p>This action will permanently remove your account and associated reservations.</p>
+          </div>
+        </div>
+
+        <button type="button" class="btn btn-danger" (click)="confirmDelete()">
+          Delete Account
+        </button>
+      </article>
+    </div>
+  </section>
+
+  <div class="dialog-backdrop" *ngIf="showDeleteDialog()" (click)="closeDeleteDialog()">
+    <div class="dialog" (click)="$event.stopPropagation()">
+      <h3>Confirm Account Deletion</h3>
+      <p>Are you sure you want to permanently delete your account? This action cannot be undone.</p>
+
+      <div class="dialog-actions">
+        <button type="button" class="btn btn-secondary" (click)="closeDeleteDialog()" [disabled]="isDeleting()">
+          Cancel
+        </button>
+        <button type="button" class="btn btn-danger" (click)="deleteAccount()" [disabled]="isDeleting()">
+          {{ isDeleting() ? 'Deleting...' : 'Yes, delete my account' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
