@@ -11,7 +11,7 @@ public class BookingService(DataContext context) : IBookingService
 {
     public async Task<IEnumerable<Booking>> GetBookingList(int userId)
     {
-        var bookings = await context.Bookings.Where(x => x.UserId == userId)
+        var bookings = await context.Bookings.Where(x => x.UserId == userId && !x.IsDeleted)
             .Include(b => b.BookingSeats)
                 .ThenInclude(bs => bs.Seat)
             .Include(b => b.BookingBaggages)

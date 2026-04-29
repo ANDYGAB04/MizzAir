@@ -58,6 +58,7 @@ public class AccountController(UserManager<User> userManager, ITokenService toke
             .FirstOrDefaultAsync(x => x.Email == loginDto.Email.ToLower());
 
         if (user == null || user.Email == null) return Unauthorized("Invalid Email");
+        if (user.IsDeleted) return Unauthorized("Account deleted");
         return new UserDto
         {
             Lastname = user.LastName,
@@ -98,8 +99,13 @@ public class AccountController(UserManager<User> userManager, ITokenService toke
 
     [Authorize]
     [HttpDelete]
-    public async Task<ActionResult<DeleteAccountResultDto>> DeleteCurrentUser()
+    public async Task<ActionResult<DeleteAccountResultDto>> DeleteCurrentUser([FromBody] DeleteAccountDto dto)
     {
+        if (!dto.Confirm)
+        {
+            return BadRequest("Confirmation required");
+        }
+
         var result = await accountService.DeleteCurrentUserAsync(User.GetUserId());
         if (result == null)
         {

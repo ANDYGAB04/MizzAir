@@ -3,6 +3,7 @@ using System;
 using API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20260429175515_BookingSoftDelete")]
+    partial class BookingSoftDelete
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.4");
@@ -38,7 +41,7 @@ namespace API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Aircrafts", (string)null);
+                    b.ToTable("Aircrafts");
                 });
 
             modelBuilder.Entity("API.Models.Airport", b =>
@@ -65,7 +68,7 @@ namespace API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Airports", (string)null);
+                    b.ToTable("Airports");
                 });
 
             modelBuilder.Entity("API.Models.AppRole", b =>
@@ -134,7 +137,7 @@ namespace API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("BaggageTypes", (string)null);
+                    b.ToTable("BaggageTypes");
                 });
 
             modelBuilder.Entity("API.Models.Booking", b =>
@@ -179,7 +182,7 @@ namespace API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Bookings", (string)null);
+                    b.ToTable("Bookings");
                 });
 
             modelBuilder.Entity("API.Models.BookingBaggage", b =>
@@ -200,7 +203,7 @@ namespace API.Migrations
 
                     b.HasIndex("BookingId");
 
-                    b.ToTable("BookingBaggages", (string)null);
+                    b.ToTable("BookingBaggages");
                 });
 
             modelBuilder.Entity("API.Models.BookingSeat", b =>
@@ -221,7 +224,7 @@ namespace API.Migrations
 
                     b.HasIndex("SeatId");
 
-                    b.ToTable("BookingSeats", (string)null);
+                    b.ToTable("BookingSeats");
                 });
 
             modelBuilder.Entity("API.Models.Flight", b =>
@@ -267,7 +270,7 @@ namespace API.Migrations
 
                     b.HasIndex("DepartureAirportId");
 
-                    b.ToTable("Flights", (string)null);
+                    b.ToTable("Flights");
                 });
 
             modelBuilder.Entity("API.Models.Notification", b =>
@@ -297,7 +300,7 @@ namespace API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Notifications", (string)null);
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("API.Models.Seat", b =>
@@ -320,7 +323,7 @@ namespace API.Migrations
 
                     b.HasIndex("AircraftId");
 
-                    b.ToTable("Seats", (string)null);
+                    b.ToTable("Seats");
                 });
 
             modelBuilder.Entity("API.Models.User", b =>

@@ -1,10 +1,12 @@
 using System;
 using System.Text;
+using System.Security.Claims;
 using API.Data;
 using API.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace API.Extensions;
 
@@ -30,6 +32,40 @@ public static class IdentityServiceExtensions
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey)),
                     ValidateIssuer = false,
                     ValidateAudience = false
+                };
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnTokenValidated = async context =>
+                    {
+                        var userManager = context.HttpContext.RequestServices.GetRequiredService<UserManager<User>>();
+
+                        var userIdValue = context.Principal?.FindFirstValue(ClaimTypes.NameIdentifier);
+                        if (!int.TryParse(userIdValue, out var userId))
+                        {
+                            context.Fail("Invalid token");
+                            return;
+                        }
+
+                        var user = await userManager.FindByIdAsync(userId.ToString());
+                        if (user is null)
+                        {
+                            context.Fail("User not found");
+                            return;
+                        }
+
+                        if (user.IsDeleted)
+                        {
+                            context.Fail("User deleted");
+                            return;
+                        }
+
+                        var stampClaim = context.Principal?.FindFirst("sstamp")?.Value;
+                        if (string.IsNullOrEmpty(stampClaim) || user.SecurityStamp != stampClaim)
+                        {
+                            context.Fail("Token revoked");
+                        }
+                    }
                 };
             });
 

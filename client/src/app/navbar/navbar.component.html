@@ -19,6 +19,7 @@
             <a routerLink="/admin/passengers" routerLinkActive="active" class="nav-link" (click)="closeMenu()"
                 *ngIf="authService.hasStaffOrAdmin()">
                 Passengers
+            </a>
             <a routerLink="/account" routerLinkActive="active" class="nav-link" (click)="closeMenu()"
                 *ngIf="authService.currentUser()">
                 My Account
