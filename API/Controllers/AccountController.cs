@@ -1,16 +1,18 @@
 using System;
 using System.Linq;
 using API.DTOs;
+using API.Extensions;
 using API.Interface;
 using API.Models;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers;
 
-public class AccountController(UserManager<User> userManager, ITokenService tokenService, IMapper mapper) : BaseApiController
+public class AccountController(UserManager<User> userManager, ITokenService tokenService, IMapper mapper, IAccountService accountService) : BaseApiController
 {
     [HttpPost("register")]//acount/register
     public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
@@ -43,6 +45,8 @@ public class AccountController(UserManager<User> userManager, ITokenService toke
             Token = await tokenService.CreateToken(user),
             FirstName = user.FirstName,
             Email = user.Email,
+            City = user.City,
+            Country = user.Country,
             Address = user.Address
         };
     }
@@ -60,8 +64,36 @@ public class AccountController(UserManager<User> userManager, ITokenService toke
             Token = await tokenService.CreateToken(user),
             FirstName = user.FirstName,
             Email = user.Email,
+            City = user.City,
+            Country = user.Country,
             Address = user.Address
         };
+    }
+
+    [Authorize]
+    [HttpGet]
+    public async Task<ActionResult<UserDto>> GetCurrentUser()
+    {
+        var user = await accountService.GetCurrentUserAsync(User.GetUserId());
+        if (user == null)
+        {
+            return NotFound("User not found");
+        }
+
+        return Ok(user);
+    }
+
+    [Authorize]
+    [HttpPatch]
+    public async Task<ActionResult<UserDto>> UpdateAccount(UpdateAccountDto updateAccountDto)
+    {
+        var result = await accountService.UpdateAccountAsync(User.GetUserId(), updateAccountDto);
+        if (!result.Succeeded)
+        {
+            return BadRequest(result.Errors);
+        }
+
+        return Ok(result.User);
     }
 
     private async Task<bool> EmailExist(string email)
