@@ -96,6 +96,19 @@ public class AccountController(UserManager<User> userManager, ITokenService toke
         return Ok(result.User);
     }
 
+    [Authorize]
+    [HttpDelete]
+    public async Task<ActionResult<DeleteAccountResultDto>> DeleteCurrentUser()
+    {
+        var result = await accountService.DeleteCurrentUserAsync(User.GetUserId());
+        if (result == null)
+        {
+            return NotFound("User not found");
+        }
+
+        return Ok(result);
+    }
+
     private async Task<bool> EmailExist(string email)
     {
         return await userManager.Users.AnyAsync(x => x.Email == email.ToLower());
