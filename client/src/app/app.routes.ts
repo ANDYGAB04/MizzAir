@@ -11,18 +11,27 @@ import { PassengerProfileComponent } from './passengers/components/passenger-pro
 import { MyAccountComponent } from './account/my-account.component';
 import { StaffListComponent } from './admin/staff/staff-list.component';
 import { FlightsAdminComponent } from './admin/flights/flights-admin.component';
+import { authGuard } from './_guards/auth.guard';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'flights', component: FlightSearchComponent },
-  { path: 'baggage', component: BaggageComponent },
-  { path: 'seats', component: SeatSelectionComponent },
-  { path: 'bookings', component: BookingsListComponent },
-  { path: 'admin/passengers', component: PassengersListComponent },
-  { path: 'admin/passengers/:id', component: PassengerProfileComponent },
-  { path: 'admin/staff', component: StaffListComponent },
-  { path: 'admin/flights', component: FlightsAdminComponent },
-  { path: 'account', component: MyAccountComponent }
+  {
+    path: '',
+    runGuardsAndResolvers: 'always',
+    canActivate: [authGuard],
+    children:
+      [{ path: 'flights', component: FlightSearchComponent },
+      { path: 'baggage', component: BaggageComponent },
+      { path: 'seats', component: SeatSelectionComponent },
+      { path: 'bookings', component: BookingsListComponent },
+      { path: 'admin/passengers', component: PassengersListComponent },
+      { path: 'admin/passengers/:id', component: PassengerProfileComponent },
+      { path: 'admin/staff', component: StaffListComponent },
+      { path: 'admin/flights', component: FlightsAdminComponent },
+      { path: 'account', component: MyAccountComponent }]
+
+  },
+  { path: '**', component: HomeComponent, pathMatch: 'full' },
 ];
