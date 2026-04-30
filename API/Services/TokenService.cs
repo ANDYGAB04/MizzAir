@@ -25,7 +25,8 @@ public class TokenService(IConfiguration config, UserManager<User> userManager) 
         var claims = new List<Claim>
         {
             new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new(ClaimTypes.Email,user.Email)
+            new(ClaimTypes.Email,user.Email),
+            new("sstamp", user.SecurityStamp ?? string.Empty)
         };
 
         var roles = await userManager.GetRolesAsync(user);

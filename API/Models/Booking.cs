@@ -9,6 +9,8 @@ public class Booking
     public DateTime BookingDate { get; set; }
     public required string Status { get; set; }
     public decimal TotalPrice { get; set; }
+    public bool IsDeleted { get; set; }
+    public DateTime? DeletedAt { get; set; }
     public List<BookingSeat> BookingSeats { get; set; } = [];
     public List<BookingBaggage> BookingBaggages { get; set; } = [];
 

@@ -40,6 +40,10 @@ public class DataContext(DbContextOptions options) : IdentityDbContext<User, App
             .HasIndex(b => b.BookingReference)
             .IsUnique();
 
+        builder.Entity<Aircraft>()
+            .HasIndex(a => a.RegistrationNumber)
+            .IsUnique();
+
         builder.Entity<Flight>().Property(f => f.Price).HasPrecision(10, 2);
         builder.Entity<Booking>().Property(b => b.TotalPrice).HasPrecision(10, 2);
         builder.Entity<BaggageType>().Property(b => b.Price).HasPrecision(10, 2);

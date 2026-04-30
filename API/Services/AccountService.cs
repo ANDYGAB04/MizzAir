@@ -85,54 +85,47 @@ public class AccountService(UserManager<User> userManager, ITokenService tokenSe
             return null;
         }
 
-        var deletedReservationsCount = user.Bookings.Count;
-        var deletedSessionsCount =
-            await context.Set<IdentityUserLogin<int>>().CountAsync(x => x.UserId == userId) +
-            await context.Set<IdentityUserToken<int>>().CountAsync(x => x.UserId == userId);
+        var deletedAt = DateTime.UtcNow;
+        var reservationsToSoftDelete = user.Bookings.Where(b => !b.IsDeleted).ToList();
+        var softDeletedReservationsCount = reservationsToSoftDelete.Count;
 
         await using var transaction = await context.Database.BeginTransactionAsync();
 
         try
         {
-            if (deletedReservationsCount > 0)
+            if (softDeletedReservationsCount > 0)
             {
-                context.Bookings.RemoveRange(user.Bookings);
+                foreach (var booking in reservationsToSoftDelete)
+                {
+                    booking.IsDeleted = true;
+                    booking.DeletedAt = deletedAt;
+                    booking.Status = "Cancelled";
+                }
             }
 
-            var userLogins = await context.Set<IdentityUserLogin<int>>()
-                .Where(x => x.UserId == userId)
-                .ToListAsync();
+            await userManager.UpdateSecurityStampAsync(user);
 
-            if (userLogins.Count > 0)
+            user.IsDeleted = true;
+            user.DeletedAt = deletedAt;
+            user.LockoutEnabled = true;
+            user.LockoutEnd = DateTimeOffset.MaxValue;
+
+            var updateResult = await userManager.UpdateAsync(user);
+            if (!updateResult.Succeeded)
             {
-                context.Set<IdentityUserLogin<int>>().RemoveRange(userLogins);
-            }
-
-            var userTokens = await context.Set<IdentityUserToken<int>>()
-                .Where(x => x.UserId == userId)
-                .ToListAsync();
-
-            if (userTokens.Count > 0)
-            {
-                context.Set<IdentityUserToken<int>>().RemoveRange(userTokens);
+                throw new InvalidOperationException(string.Join(", ", updateResult.Errors.Select(e => e.Description)));
             }
 
             await context.SaveChangesAsync();
-
-            var deleteResult = await userManager.DeleteAsync(user);
-
-            if (!deleteResult.Succeeded)
-            {
-                throw new InvalidOperationException(string.Join(", ", deleteResult.Errors.Select(e => e.Description)));
-            }
 
             await transaction.CommitAsync();
 
             return new DeleteAccountResultDto
             {
                 UserId = userId,
-                DeletedReservationsCount = deletedReservationsCount,
-                DeletedSessionsCount = deletedSessionsCount,
+                DeletedReservationsCount = softDeletedReservationsCount,
+                DeletedSessionsCount = 0,
+                DeletedAt = deletedAt,
                 Message = "Account deleted successfully"
             };
         }

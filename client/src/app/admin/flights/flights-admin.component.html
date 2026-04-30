@@ -1,0 +1,182 @@
+<div class="admin-page">
+  <section class="admin-header">
+    <div>
+      <h1>Admin Panel</h1>
+      <p>Manage flight schedules, capacity, aircraft assignments, and route timing.</p>
+    </div>
+
+    <button class="btn btn-primary" type="button" (click)="openAddModal()">Add Flight</button>
+  </section>
+
+  <nav class="admin-tabs" aria-label="Admin sections">
+    <a routerLink="/admin/passengers" routerLinkActive="active" class="tab-link">Passengers</a>
+    <a routerLink="/admin/staff" routerLinkActive="active" class="tab-link">Staff</a>
+    <a routerLink="/admin/flights" routerLinkActive="active" class="tab-link">Flights</a>
+  </nav>
+
+  <section class="admin-panel">
+    <div class="panel-toolbar">
+      <div>
+        <h2>Flight Schedules</h2>
+        <p>{{ flightCount() }} flight{{ flightCount() === 1 ? '' : 's' }}</p>
+      </div>
+
+      <button class="btn btn-secondary" type="button" (click)="loadData()" [disabled]="isLoading()">
+        Refresh
+      </button>
+    </div>
+
+    <div class="loading-state" *ngIf="isLoading()">Loading flights...</div>
+
+    <div class="error-message" *ngIf="error() && !isLoading()">
+      {{ error() }}
+    </div>
+
+    <div class="empty-state" *ngIf="!isLoading() && !error() && flights().length === 0">
+      <h2>No flights found</h2>
+      <p>Add a flight schedule to make it available for booking.</p>
+    </div>
+
+    <div class="table-wrapper" *ngIf="!isLoading() && !error() && flights().length > 0">
+      <table class="flights-table">
+        <thead>
+          <tr>
+            <th>Route</th>
+            <th>Departure</th>
+            <th>Arrival</th>
+            <th>Aircraft</th>
+            <th>Status</th>
+            <th>Seats</th>
+            <th>Price</th>
+            <th class="actions-column">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let flight of flights()">
+            <td>
+              <div class="primary-text">{{ routeLabel(flight) }}</div>
+              <div class="secondary-text">ID {{ flight.id }} · {{ flight.duration }} min</div>
+            </td>
+            <td>{{ flight.departureTime | date : 'dd MMM yyyy, HH:mm' }}</td>
+            <td>{{ flight.arrivalTime | date : 'dd MMM yyyy, HH:mm' }}</td>
+            <td>{{ flight.aircraftType }}</td>
+            <td><span class="status-badge">{{ flight.status }}</span></td>
+            <td>{{ flight.availableSeats }}</td>
+            <td>{{ flight.price | currency }}</td>
+            <td class="actions-cell">
+              <button class="btn btn-secondary btn-sm" type="button" (click)="openEditModal(flight)">Edit</button>
+              <button class="btn btn-danger btn-sm" type="button" (click)="requestDelete(flight)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<div class="modal-backdrop" *ngIf="isModalOpen()" (click)="closeModal()">
+  <section class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="flightModalTitle" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2 id="flightModalTitle">{{ modalTitle() }}</h2>
+      <button class="icon-button" type="button" aria-label="Close" (click)="closeModal()">&times;</button>
+    </div>
+
+    <form [formGroup]="flightForm" class="flight-form" (ngSubmit)="saveFlight()">
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="departureTime">Departure time</label>
+          <input id="departureTime" class="form-control" type="datetime-local" formControlName="departureTime" />
+        </div>
+
+        <div class="form-group">
+          <label for="arrivalTime">Arrival time</label>
+          <input id="arrivalTime" class="form-control" type="datetime-local" formControlName="arrivalTime" />
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="departureAirportId">Departure airport</label>
+          <select id="departureAirportId" class="form-control" formControlName="departureAirportId">
+            <option [ngValue]="null">Select airport</option>
+            <option *ngFor="let airport of airports()" [ngValue]="airport.id">
+              {{ airport.city }} - {{ airport.iataCode }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="arrivalAirportId">Arrival airport</label>
+          <select id="arrivalAirportId" class="form-control" formControlName="arrivalAirportId">
+            <option [ngValue]="null">Select airport</option>
+            <option *ngFor="let airport of airports()" [ngValue]="airport.id">
+              {{ airport.city }} - {{ airport.iataCode }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="aircraftId">Aircraft</label>
+          <select id="aircraftId" class="form-control" formControlName="aircraftId">
+            <option [ngValue]="null">Select aircraft</option>
+            <option *ngFor="let plane of aircraft()" [ngValue]="plane.id">
+              {{ aircraftLabel(plane) }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="status">Status</label>
+          <select id="status" class="form-control" formControlName="status">
+            <option *ngFor="let status of statuses" [ngValue]="status">{{ status }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="availableSeats">Available seats</label>
+          <input id="availableSeats" class="form-control" type="number" min="0" formControlName="availableSeats" />
+        </div>
+
+        <div class="form-group">
+          <label for="price">Price</label>
+          <input id="price" class="form-control" type="number" min="0.01" step="0.01" formControlName="price" />
+        </div>
+      </div>
+
+      <div class="invalid-feedback" *ngIf="flightForm.invalid && flightForm.touched">
+        Complete all required fields before saving.
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-secondary" type="button" (click)="closeModal()" [disabled]="isSaving()">
+          Cancel
+        </button>
+        <button class="btn btn-primary" type="submit" [disabled]="isSaving()">
+          {{ isSaving() ? 'Saving...' : 'Save Flight' }}
+        </button>
+      </div>
+    </form>
+  </section>
+</div>
+
+<div class="modal-backdrop" *ngIf="flightToDelete()" (click)="cancelDelete()">
+  <section class="confirm-panel" role="dialog" aria-modal="true" aria-labelledby="deleteFlightTitle" (click)="$event.stopPropagation()">
+    <h2 id="deleteFlightTitle">Delete flight</h2>
+    <p>
+      Delete flight {{ flightToDelete()?.id }} from {{ flightToDelete()?.departureAirportName }} to
+      {{ flightToDelete()?.arrivalAirportName }}?
+    </p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" type="button" (click)="cancelDelete()" [disabled]="isDeleting()">
+        Cancel
+      </button>
+      <button class="btn btn-danger" type="button" (click)="deleteFlight()" [disabled]="isDeleting()">
+        {{ isDeleting() ? 'Deleting...' : 'Delete' }}
+      </button>
+    </div>
+  </section>
+</div>

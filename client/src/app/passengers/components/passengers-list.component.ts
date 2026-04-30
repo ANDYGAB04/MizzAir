@@ -1,7 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 
 import { AuthService } from '../../services/auth.service';
@@ -14,7 +14,7 @@ type SortField = 'fullname' | 'email' | 'phone';
 @Component({
   selector: 'app-passengers-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink, RouterLinkActive],
   templateUrl: './passengers-list.component.html',
   styleUrl: './passengers-list.component.css',
 })
@@ -121,4 +121,3 @@ export class PassengersListComponent {
     return `${p.firstName} ${p.lastName}`.trim();
   }
 }
-

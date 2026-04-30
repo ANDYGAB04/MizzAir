@@ -23,6 +23,32 @@
   margin: 0;
 }
 
+.admin-tabs {
+  max-width: 1200px;
+  margin: 0 auto 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.tab-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 42px;
+  padding: 0.7rem 1rem;
+  border: 1px solid #d7ddeb;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.75);
+  color: #3f4960;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.tab-link.active {
+  background: #667eea;
+  border-color: #667eea;
+  color: white;
+}
+
 .passengers-panel {
   max-width: 1200px;
   margin: 0 auto;
@@ -172,8 +198,11 @@
     align-items: stretch;
   }
 
+  .admin-tabs {
+    overflow-x: auto;
+  }
+
   .pagination-info {
     text-align: left;
   }
 }
-

@@ -11,6 +11,30 @@ export interface Flight {
   aircraftType: string;
 }
 
+export interface AdminFlight extends Flight {
+  aircraftId: number;
+  departureAirportId: number;
+  arrivalAirportId: number;
+}
+
+export interface FlightEditorRequest {
+  departureTime: string;
+  arrivalTime: string;
+  price: number;
+  availableSeats: number;
+  status: string;
+  aircraftId: number;
+  departureAirportId: number;
+  arrivalAirportId: number;
+}
+
+export interface DeleteFlightResult {
+  succeeded: boolean;
+  flightId: number;
+  message: string;
+  errors: string[];
+}
+
 export interface Airport {
   id: number;
   name: string;
@@ -25,4 +49,13 @@ export interface SearchFlightRequest {
   departureTime: Date;
   numberOfPassengers: number;
   sortBy?: string;
+}
+
+export interface AircraftOption {
+  id: number;
+  model: string;
+  registrationNumber?: string;
+  totalSeats: number;
+  seatRows: number;
+  seatsPerRow: number;
 }
