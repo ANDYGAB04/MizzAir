@@ -9,21 +9,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Services;
 
-public class PassengerService : IPassengerService
+public class PassengerService(DataContext _context, UserManager<User> _userManager, IBookingService _bookingService, IMapper _mapper) : IPassengerService
 {
-    private readonly UserManager<User> _userManager;
-    private readonly DataContext _context;
-    private readonly IBookingService _bookingService;
-    private readonly IMapper _mapper;
-
-    public PassengerService(UserManager<User> userManager, DataContext context, IBookingService bookingService, IMapper mapper)
-    {
-        _userManager = userManager;
-        _context = context;
-        _bookingService = bookingService;
-        _mapper = mapper;
-    }
-
     public async Task<PaginatedResultDto<PassengerDto>> GetPassengersAsync(PassengerFilterDto filterDto)
     {
         // Get users with Passenger role
@@ -32,21 +19,24 @@ public class PassengerService : IPassengerService
             .Include(u => u.Bookings)
             .AsQueryable();
 
+
+
+
         // Apply search filter (by name or email)
         if (!string.IsNullOrWhiteSpace(filterDto.SearchTerm))
         {
             var searchTerm = filterDto.SearchTerm.ToLower();
-            passengersQuery = passengersQuery.Where(p => 
+            passengersQuery = passengersQuery.Where(p =>
                 p.FirstName.ToLower().Contains(searchTerm) ||
                 p.LastName.ToLower().Contains(searchTerm) ||
-                p.Email.ToLower().Contains(searchTerm) ||
+                (p.Email != null && p.Email.ToLower().Contains(searchTerm)) ||
                 (p.PhoneNumber != null && p.PhoneNumber.ToLower().Contains(searchTerm)));
         }
 
         // Apply flight filter
         if (filterDto.FlightId.HasValue)
         {
-            passengersQuery = passengersQuery.Where(p => 
+            passengersQuery = passengersQuery.Where(p =>
                 p.Bookings.Any(b => b.FlightId == filterDto.FlightId.Value));
         }
 
@@ -56,7 +46,7 @@ public class PassengerService : IPassengerService
             "fullname" => filterDto.IsDescending
                 ? passengersQuery.OrderByDescending(p => p.LastName).ThenByDescending(p => p.FirstName)
                 : passengersQuery.OrderBy(p => p.LastName).ThenBy(p => p.FirstName),
-            "firstname" => filterDto.IsDescending 
+            "firstname" => filterDto.IsDescending
                 ? passengersQuery.OrderByDescending(p => p.FirstName)
                 : passengersQuery.OrderBy(p => p.FirstName),
             "lastname" => filterDto.IsDescending
@@ -96,7 +86,7 @@ public class PassengerService : IPassengerService
                 Id = p.Id,
                 FirstName = p.FirstName,
                 LastName = p.LastName,
-                Email = p.Email,
+                Email = p.Email ?? string.Empty,
                 PhoneNumber = p.PhoneNumber,
                 Address = p.Address,
                 TotalBookings = p.Bookings.Count,
@@ -126,7 +116,7 @@ public class PassengerService : IPassengerService
                 Id = p.Id,
                 FirstName = p.FirstName,
                 LastName = p.LastName,
-                Email = p.Email,
+                Email = p.Email ?? string.Empty,
                 PhoneNumber = p.PhoneNumber,
                 Address = p.Address,
                 TotalBookings = p.Bookings.Count,
@@ -134,6 +124,10 @@ public class PassengerService : IPassengerService
             })
             .FirstOrDefaultAsync();
 
+        if (passenger is null)
+        {
+            throw new NullReferenceException("Passenger not found");
+        }
         return passenger;
     }
 
@@ -146,7 +140,7 @@ public class PassengerService : IPassengerService
 
         if (passenger == null)
         {
-            return null;
+            throw new NullReferenceException("Passenger not found");
         }
 
         var deletedReservationsCount = passenger.Bookings.Count;
