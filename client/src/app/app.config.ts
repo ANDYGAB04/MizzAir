@@ -14,6 +14,8 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(withInterceptors([jwtInterceptor])),
     provideAnimations(),
-    provideToastr()
+    provideToastr({
+      positionClass: 'toast-bottom-right',
+    })
   ]
 };
