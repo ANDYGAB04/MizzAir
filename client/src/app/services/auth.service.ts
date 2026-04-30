@@ -1,5 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { User } from '../../models/user';
@@ -91,9 +91,7 @@ export class AuthService {
   }
 
   getCurrentUser(): Observable<User> {
-    return this.http.get<User>(this.baseUrl + 'account', {
-      headers: this.getAuthHeaders()
-    }).pipe(
+    return this.http.get<User>(this.baseUrl + 'account').pipe(
       tap(user => this.setCurrentUser(user))
     );
   }
@@ -106,13 +104,5 @@ export class AuthService {
   logout() {
     localStorage.removeItem('user');
     this.currentUser.set(null);
-  }
-
-  private getAuthHeaders(): HttpHeaders {
-    const token = this.currentUser()?.token;
-
-    return new HttpHeaders({
-      Authorization: `Bearer ${token ?? ''}`
-    });
   }
 }

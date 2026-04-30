@@ -1,5 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import {
@@ -11,14 +11,12 @@ import {
   SearchFlightRequest,
   Airport
 } from '../../models/flight';
-import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FlightService {
   private http = inject(HttpClient);
-  private authService = inject(AuthService);
   baseUrl = environment.apiUrl;
 
   // Signals
@@ -59,27 +57,19 @@ export class FlightService {
   }
 
   getAdminFlights(): Observable<AdminFlight[]> {
-    return this.http.get<AdminFlight[]>(this.baseUrl + 'flight', {
-      headers: this.getAuthHeaders(),
-    });
+    return this.http.get<AdminFlight[]>(this.baseUrl + 'flight');
   }
 
   createFlight(payload: FlightEditorRequest): Observable<AdminFlight> {
-    return this.http.post<AdminFlight>(this.baseUrl + 'flight', payload, {
-      headers: this.getAuthHeaders(),
-    });
+    return this.http.post<AdminFlight>(this.baseUrl + 'flight', payload);
   }
 
   updateFlight(flightId: number, payload: FlightEditorRequest): Observable<AdminFlight> {
-    return this.http.put<AdminFlight>(this.baseUrl + `flight/${flightId}`, payload, {
-      headers: this.getAuthHeaders(),
-    });
+    return this.http.put<AdminFlight>(this.baseUrl + `flight/${flightId}`, payload);
   }
 
   deleteFlight(flightId: number): Observable<DeleteFlightResult> {
-    return this.http.delete<DeleteFlightResult>(this.baseUrl + `flight/${flightId}`, {
-      headers: this.getAuthHeaders(),
-    });
+    return this.http.delete<DeleteFlightResult>(this.baseUrl + `flight/${flightId}`);
   }
 
   getAirports(): Observable<Airport[]> {
@@ -87,9 +77,7 @@ export class FlightService {
   }
 
   getAircraft(): Observable<AircraftOption[]> {
-    return this.http.get<AircraftOption[]>(this.baseUrl + 'aircraft', {
-      headers: this.getAuthHeaders(),
-    });
+    return this.http.get<AircraftOption[]>(this.baseUrl + 'aircraft');
   }
 
   private loadAirports() {
@@ -119,13 +107,5 @@ export class FlightService {
 
   getNumberOfPassengers(): number {
     return this.numberOfPassengers();
-  }
-
-  private getAuthHeaders(): HttpHeaders {
-    const token = this.authService.currentUser()?.token;
-
-    return new HttpHeaders({
-      Authorization: `Bearer ${token ?? ''}`
-    });
   }
 }

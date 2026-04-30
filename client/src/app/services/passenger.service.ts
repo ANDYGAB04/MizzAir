@@ -1,9 +1,8 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { environment } from '../../environments/environment';
-import { AuthService } from './auth.service';
 import { Booking } from '../../models/booking';
 import { Passenger, PassengerFilterRequest } from '../../models/passenger';
 import { PaginatedResult } from '../../models/paginated-result';
@@ -13,7 +12,6 @@ import { PaginatedResult } from '../../models/paginated-result';
 })
 export class PassengerService {
   private http = inject(HttpClient);
-  private authService = inject(AuthService);
   private baseUrl = environment.apiUrl;
 
   getPassengers(filter: PassengerFilterRequest): Observable<PaginatedResult<Passenger>> {
@@ -26,29 +24,15 @@ export class PassengerService {
       ...(filter.pageSize !== undefined && { pageSize: filter.pageSize }),
     };
 
-    return this.http.get<PaginatedResult<Passenger>>(this.baseUrl + 'passenger', {
-      headers: this.getAuthHeaders(),
-      params,
-    });
+    return this.http.get<PaginatedResult<Passenger>>(this.baseUrl + 'passenger', { params });
   }
 
   getPassengerById(passengerId: number): Observable<Passenger> {
-    return this.http.get<Passenger>(this.baseUrl + `passenger/${passengerId}`, {
-      headers: this.getAuthHeaders(),
-    });
+    return this.http.get<Passenger>(this.baseUrl + `passenger/${passengerId}`);
   }
 
   getPassengerHistory(passengerId: number): Observable<Booking[]> {
-    return this.http.get<Booking[]>(this.baseUrl + `passenger/${passengerId}/history`, {
-      headers: this.getAuthHeaders(),
-    });
-  }
-
-  private getAuthHeaders(): HttpHeaders {
-    const token = this.authService.currentUser()?.token;
-    return new HttpHeaders({
-      Authorization: `Bearer ${token ?? ''}`,
-    });
+    return this.http.get<Booking[]>(this.baseUrl + `passenger/${passengerId}/history`);
   }
 }
 

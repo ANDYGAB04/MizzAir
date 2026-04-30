@@ -1,9 +1,8 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { User } from '../../models/user';
-import { AuthService } from './auth.service';
 
 export interface UpdateAccountPayload {
   city?: string;
@@ -25,35 +24,21 @@ export interface DeleteAccountResult {
 })
 export class AccountService {
   private http = inject(HttpClient);
-  private authService = inject(AuthService);
   private baseUrl = environment.apiUrl;
 
   getCurrentUser(): Observable<User> {
-    return this.http.get<User>(this.baseUrl + 'account', {
-      headers: this.getAuthHeaders()
-    });
+    return this.http.get<User>(this.baseUrl + 'account');
   }
 
   updateAccount(payload: UpdateAccountPayload): Observable<User> {
-    return this.http.patch<User>(this.baseUrl + 'account', payload, {
-      headers: this.getAuthHeaders()
-    });
+    return this.http.patch<User>(this.baseUrl + 'account', payload);
   }
 
   deleteAccount(): Observable<DeleteAccountResult> {
     return this.http.delete<DeleteAccountResult>(this.baseUrl + 'account', {
-      headers: this.getAuthHeaders(),
       body: {
         confirm: true
       }
-    });
-  }
-
-  private getAuthHeaders(): HttpHeaders {
-    const token = this.authService.currentUser()?.token;
-
-    return new HttpHeaders({
-      Authorization: `Bearer ${token ?? ''}`
     });
   }
 }
