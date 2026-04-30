@@ -6,20 +6,14 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers;
 
 [Authorize(Policy = "RequireStaffOrAdminRole")]
-public class PassengerController : BaseApiController
+public class PassengerController(IPassengerService _passengerService) : BaseApiController
 {
-    private readonly IPassengerService _passengerService;
-
-    public PassengerController(IPassengerService passengerService)
-    {
-        _passengerService = passengerService;
-    }
 
     [HttpGet]
     public async Task<ActionResult<PaginatedResultDto<PassengerDto>>> GetPassengers([FromQuery] PassengerFilterDto filterDto)
     {
         var result = await _passengerService.GetPassengersAsync(filterDto);
-        
+
         if (result == null || result.Items.Count == 0)
         {
             return NotFound("No passengers found with the specified criteria");
@@ -32,7 +26,7 @@ public class PassengerController : BaseApiController
     public async Task<ActionResult<PassengerDto>> GetPassenger(int id)
     {
         var passenger = await _passengerService.GetPassengerByIdAsync(id);
-        
+
         if (passenger == null)
         {
             return NotFound($"Passenger with ID {id} not found");

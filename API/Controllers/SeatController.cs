@@ -1,9 +1,11 @@
 using API.DTOs;
 using API.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
+    [Authorize]
     public class SeatController(ISeatService seatService) : BaseApiController
     {
         [HttpGet("flight/{flightId}")]

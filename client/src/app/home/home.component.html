@@ -3,7 +3,7 @@
     <section class="hero">
         <div class="hero-content">
             <h1 *ngIf="!authService.currentUser()">Welcome to MizzAir</h1>
-            <h1 *ngIf="authService.currentUser()">Welcome back, {{ authService.currentUser()?.email }}!</h1>
+            <h1 *ngIf="authService.currentUser()">Welcome back, {{ authService.currentUser()?.firstName }}!</h1>
             <p *ngIf="!authService.currentUser()">Book your flights and explore the world with us</p>
             <p *ngIf="authService.currentUser()">Ready for your next adventure? Browse and book your flights now</p>
             <div class="hero-buttons">

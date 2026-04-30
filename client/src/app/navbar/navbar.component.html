@@ -42,7 +42,7 @@
 
         <!-- Show User email and Logout button when logged in -->
         <div class="user-section" *ngIf="authService.currentUser()">
-            <span class="user-email">{{ authService.currentUser()?.email }}</span>
+            <span class="user-email">{{ authService.currentUser()?.firstName }}</span>
             <a routerLink="/account" routerLinkActive="active" class="nav-link nav-link-btn" (click)="closeMenu()">
                 Account
             </a>

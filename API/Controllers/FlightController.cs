@@ -7,6 +7,7 @@ namespace API.Controllers
 {
     public class FlightController(IFlightService flightService) : BaseApiController
     {
+        [Authorize]
         [HttpGet("search")]
         public async Task<ActionResult<IEnumerable<FlightDto>>> Search([FromQuery] SearchFlightDto searchFlightDto)
         {
