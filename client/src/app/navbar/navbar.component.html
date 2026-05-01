@@ -28,10 +28,6 @@
                 *ngIf="authService.hasAdmin()">
                 Manage Flights
             </a>
-            <a routerLink="/account" routerLinkActive="active" class="nav-link" (click)="closeMenu()"
-                *ngIf="authService.currentUser()">
-                My Account
-            </a>
         </div>
 
         <!-- Show Login button when not logged in -->
@@ -40,15 +36,24 @@
             Login
         </a>
 
-        <!-- Show User email and Logout button when logged in -->
-        <div class="user-section" *ngIf="authService.currentUser()">
-            <span class="user-email">{{ authService.currentUser()?.firstName }}</span>
-            <a routerLink="/account" routerLinkActive="active" class="nav-link nav-link-btn" (click)="closeMenu()">
-                Account
-            </a>
-            <button class="nav-link nav-link-btn logout-btn" (click)="logout()">
-                Logout
+        <!-- Show User dropdown when logged in -->
+        <div class="user-section" *ngIf="authService.currentUser()" dropdown>
+            <button class="user-name-btn" dropdownToggle type="button" [attr.aria-label]="'User menu'">
+                {{ authService.currentUser()?.firstName }}
+                <span class="dropdown-arrow">▼</span>
             </button>
+            <ul *dropdownMenu class="dropdown-menu" role="menu">
+                <li role="menuitem">
+                    <a routerLink="/account" class="dropdown-item" (click)="closeMenu()">
+                        Account
+                    </a>
+                </li>
+                <li role="menuitem">
+                    <a href="javascript:void(0)" class="dropdown-item logout-item" (click)="logout()">
+                        Logout
+                    </a>
+                </li>
+            </ul>
         </div>
 
         <div class="hamburger" (click)="toggleMenu()" [class.active]="isMenuOpen">
