@@ -37,6 +37,60 @@
         </a>
 
         <!-- Show User dropdown when logged in -->
+        <div class="nav-actions" *ngIf="authService.currentUser()">
+            <button class="notif-btn" type="button" (click)="toggleNotifications($event)"
+                [attr.aria-label]="'Notifications'">
+                <span class="notif-icon">🔔</span>
+                <span class="notif-badge" *ngIf="notificationService.unreadCount() > 0">
+                    {{ notificationService.unreadCount() }}
+                </span>
+            </button>
+
+            <div class="notif-panel" *ngIf="isNotificationsOpen" (click)="$event.stopPropagation()">
+                <div class="notif-panel-header">
+                    <div class="notif-title">Notifications</div>
+                    <button class="notif-close" type="button" (click)="closeNotifications()" aria-label="Close">
+                        ✕
+                    </button>
+                </div>
+
+                <div class="notif-panel-body" *ngIf="notificationService.loading()">
+                    Loading…
+                </div>
+
+                <div class="notif-panel-body error" *ngIf="notificationService.error() as err">
+                    {{ err }}
+                </div>
+
+                <div class="notif-panel-body empty"
+                    *ngIf="!notificationService.loading() && !notificationService.error() && notificationService.notifications().length === 0">
+                    No notifications yet.
+                </div>
+
+                <div class="notif-list"
+                    *ngIf="!notificationService.loading() && !notificationService.error() && notificationService.notifications().length > 0">
+                    <div class="notif-item" *ngFor="let n of notificationService.notifications()"
+                        [class.unread]="!n.isRead">
+                        <div class="notif-item-main">
+                            <div class="notif-item-top">
+                                <span class="notif-type">{{ n.type }}</span>
+                                <span class="notif-date">{{ n.createdAt | date:'medium' }}</span>
+                            </div>
+                            <div class="notif-message">{{ n.message }}</div>
+                        </div>
+                        <button class="mark-read-btn" type="button" *ngIf="!n.isRead"
+                            (click)="notificationService.markRead(n.id, true)">
+                            Mark read
+                        </button>
+                        <button class="mark-unread-btn" type="button" *ngIf="n.isRead"
+                            (click)="notificationService.markRead(n.id, false)">
+                            Mark unread
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="user-section" *ngIf="authService.currentUser()" dropdown>
             <button class="user-name-btn" dropdownToggle type="button" [attr.aria-label]="'User menu'">
                 {{ authService.currentUser()?.firstName }}
