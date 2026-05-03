@@ -1,0 +1,176 @@
+<div class="aircraft-admin-container">
+    <div class="header">
+        <h1>Aircraft Management</h1>
+        <button class="btn btn-primary add-btn" (click)="openAddModal()" [disabled]="isLoading()">
+            Add Aircraft
+        </button>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading()" class="loading-spinner">
+        <p>Loading aircraft data...</p>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error()" class="alert alert-danger">
+        {{ error() }}
+        <button class="btn btn-sm btn-outline-danger" (click)="loadAircraft()">Retry</button>
+    </div>
+
+    <!-- Aircraft Table -->
+    <div *ngIf="!isLoading() && aircraft().length > 0" class="aircraft-table-wrapper">
+        <p class="aircraft-count">Total Aircraft: {{ aircraftCount() }}</p>
+        <table class="table table-striped table-hover">
+            <thead class="table-header">
+                <tr>
+                    <th>Model</th>
+                    <th>Registration Number</th>
+                    <th>Total Seats</th>
+                    <th>Rows</th>
+                    <th>Seats/Row</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let ac of aircraft()">
+                    <td>{{ ac.model }}</td>
+                    <td>{{ ac.registrationNumber }}</td>
+                    <td>{{ ac.totalSeats }}</td>
+                    <td>{{ ac.seatRows }}</td>
+                    <td>{{ ac.seatsPerRow }}</td>
+                    <td class="actions">
+                        <button class="btn btn-sm btn-warning edit-btn" (click)="openEditModal(ac)"
+                            [disabled]="isSaving()">
+                            Edit
+                        </button>
+                        <button class="btn btn-sm btn-danger delete-btn" (click)="openDeleteModal(ac)"
+                            [disabled]="isDeleting()">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoading() && aircraft().length === 0" class="empty-state">
+        <p>No aircraft found. Start by adding a new aircraft.</p>
+        <button class="btn btn-primary" (click)="openAddModal()">Add First Aircraft</button>
+    </div>
+
+    <!-- Add/Edit Modal -->
+    <div *ngIf="isModalOpen()" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>{{ modalTitle() }}</h2>
+                <button class="modal-close-btn" (click)="closeModal()" [disabled]="isSaving()">
+                    ×
+                </button>
+            </div>
+
+            <form [formGroup]="aircraftForm" (ngSubmit)="saveAircraft()" class="modal-form">
+                <!-- Model Field -->
+                <div class="form-group">
+                    <label for="model">Model <span class="required">*</span></label>
+                    <input type="text" id="model" class="form-control" formControlName="model"
+                        placeholder="e.g., Boeing 737" [disabled]="isSaving()">
+                    <div *ngIf="aircraftForm.get('model')?.invalid && aircraftForm.get('model')?.touched"
+                        class="error-text">
+                        Model is required
+                    </div>
+                </div>
+
+                <!-- Registration Number Field -->
+                <div class="form-group">
+                    <label for="registrationNumber">Registration Number <span class="required">*</span></label>
+                    <input type="text" id="registrationNumber" class="form-control" formControlName="registrationNumber"
+                        placeholder="e.g., N123AB" [disabled]="isSaving()">
+                    <div *ngIf="aircraftForm.get('registrationNumber')?.invalid && aircraftForm.get('registrationNumber')?.touched"
+                        class="error-text">
+                        Registration number is required
+                    </div>
+                </div>
+
+                <!-- Seat Rows Field -->
+                <div class="form-group">
+                    <label for="seatRows">Seat Rows <span class="required">*</span></label>
+                    <input type="number" id="seatRows" class="form-control" formControlName="seatRows" min="1"
+                        [disabled]="isSaving()">
+                    <div *ngIf="aircraftForm.get('seatRows')?.invalid && aircraftForm.get('seatRows')?.touched"
+                        class="error-text">
+                        Seat rows must be at least 1
+                    </div>
+                </div>
+
+                <!-- Seats Per Row Field -->
+                <div class="form-group">
+                    <label for="seatsPerRow">Seats Per Row <span class="required">*</span></label>
+                    <input type="number" id="seatsPerRow" class="form-control" formControlName="seatsPerRow" min="1"
+                        [disabled]="isSaving()">
+                    <div *ngIf="aircraftForm.get('seatsPerRow')?.invalid && aircraftForm.get('seatsPerRow')?.touched"
+                        class="error-text">
+                        Seats per row must be at least 1
+                    </div>
+                </div>
+
+                <!-- Total Seats Field (Auto-calculated) -->
+                <div class="form-group">
+                    <label for="totalSeats">Total Seats <span class="calculated-badge">(calculated)</span></label>
+                    <input type="number" id="totalSeats" class="form-control" formControlName="totalSeats" readonly>
+                    <small class="form-text text-muted">Auto-calculated: Rows × Seats/Row</small>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary cancel-btn" (click)="closeModal()"
+                        [disabled]="isSaving()">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary save-btn"
+                        [disabled]="aircraftForm.invalid || isSaving()">
+                        <span *ngIf="isSaving()">Saving...</span>
+                        <span *ngIf="!isSaving()">{{ selectedAircraft() ? 'Update' : 'Create' }} Aircraft</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div *ngIf="aircraftToDelete()" class="modal-overlay delete-overlay">
+        <div class="modal-content delete-modal">
+            <div class="delete-modal-header">
+                <div class="delete-icon">⚠️</div>
+                <h2>Delete Aircraft</h2>
+            </div>
+
+            <div class="modal-body delete-modal-body">
+                <p class="delete-message">Are you sure you want to delete the following aircraft?</p>
+                <div class="aircraft-info delete-aircraft-info">
+                    <div class="aircraft-detail">
+                        <span class="detail-label">Model:</span>
+                        <span class="detail-value">{{ aircraftToDelete()!.model }}</span>
+                    </div>
+                    <div class="aircraft-detail">
+                        <span class="detail-label">Registration:</span>
+                        <span class="detail-value">{{ aircraftToDelete()!.registrationNumber }}</span>
+                    </div>
+                </div>
+                <div class="warning-box">
+                    <span class="warning-icon">⚡</span>
+                    <p class="warning-text">This action cannot be undone.</p>
+                </div>
+            </div>
+
+            <div class="modal-actions delete-modal-actions">
+                <button class="btn btn-secondary cancel-btn" (click)="closeDeleteModal()" [disabled]="isDeleting()">
+                    Cancel
+                </button>
+                <button class="btn btn-danger delete-confirm-btn" (click)="confirmDelete()" [disabled]="isDeleting()">
+                    <span *ngIf="isDeleting()">🗑️ Deleting...</span>
+                    <span *ngIf="!isDeleting()">🗑️ Delete Aircraft</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

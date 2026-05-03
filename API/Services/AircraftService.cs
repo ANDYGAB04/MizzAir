@@ -58,6 +58,37 @@ public class AircraftService(DataContext context, IMapper mapper) : IAircraftSer
         };
     }
 
+    public async Task<AircraftOperationResultDto> UpdateAircraftAsync(int id, UpdateAircraftDto dto)
+    {
+        var aircraft = await context.Aircrafts.FindAsync(id);
+
+        if (aircraft == null)
+        {
+            return Failure(["Aircraft not found."]);
+        }
+
+        var errors = await ValidateAircraftForUpdateAsync(dto, id);
+        if (errors.Count > 0)
+        {
+            return Failure(errors);
+        }
+
+        aircraft.Model = dto.Model.Trim();
+        aircraft.RegistrationNumber = NormalizeRegistrationNumber(dto.RegistrationNumber);
+        aircraft.TotalSeats = dto.TotalSeats;
+        aircraft.SeatRows = dto.SeatRows;
+        aircraft.SeatsPerRow = dto.SeatsPerRow;
+
+        context.Aircrafts.Update(aircraft);
+        await context.SaveChangesAsync();
+
+        return new AircraftOperationResultDto
+        {
+            Succeeded = true,
+            Aircraft = mapper.Map<AircraftDto>(aircraft)
+        };
+    }
+
     public async Task<DeleteAircraftResultDto?> DeleteAircraftAsync(int id)
     {
         var aircraft = await context.Aircrafts
@@ -111,6 +142,34 @@ public class AircraftService(DataContext context, IMapper mapper) : IAircraftSer
 
         var registrationNumber = NormalizeRegistrationNumber(dto.RegistrationNumber);
         if (await context.Aircrafts.AnyAsync(a => a.RegistrationNumber == registrationNumber))
+        {
+            errors.Add("Registration number is already used.");
+        }
+
+        return errors;
+    }
+
+    private async Task<List<string>> ValidateAircraftForUpdateAsync(UpdateAircraftDto dto, int aircraftId)
+    {
+        var errors = new List<string>();
+
+        if (string.IsNullOrWhiteSpace(dto.Model))
+        {
+            errors.Add("Model is required.");
+        }
+
+        if (string.IsNullOrWhiteSpace(dto.RegistrationNumber))
+        {
+            errors.Add("Registration number is required.");
+        }
+
+        if (dto.TotalSeats != dto.SeatRows * dto.SeatsPerRow)
+        {
+            errors.Add("Total seats must equal seat rows multiplied by seats per row.");
+        }
+
+        var registrationNumber = NormalizeRegistrationNumber(dto.RegistrationNumber);
+        if (await context.Aircrafts.AnyAsync(a => a.RegistrationNumber == registrationNumber && a.Id != aircraftId))
         {
             errors.Add("Registration number is already used.");
         }

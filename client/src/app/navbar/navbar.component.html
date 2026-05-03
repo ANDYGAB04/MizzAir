@@ -28,6 +28,10 @@
                 *ngIf="authService.hasAdmin()">
                 Manage Flights
             </a>
+            <a routerLink="/admin/aircraft" routerLinkActive="active" class="nav-link" (click)="closeMenu()"
+                *ngIf="authService.hasAdmin()">
+                Manage Aircraft
+            </a>
         </div>
 
         <!-- Show Login button when not logged in -->

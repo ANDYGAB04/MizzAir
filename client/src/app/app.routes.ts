@@ -11,6 +11,7 @@ import { PassengerProfileComponent } from './passengers/components/passenger-pro
 import { MyAccountComponent } from './account/my-account.component';
 import { StaffListComponent } from './admin/staff/staff-list.component';
 import { FlightsAdminComponent } from './admin/flights/flights-admin.component';
+import { AircraftAdminComponent } from './admin/aircraft/aircraft-admin.component';
 import { authGuard } from './_guards/auth.guard';
 
 export const routes: Routes = [
@@ -30,6 +31,7 @@ export const routes: Routes = [
       { path: 'admin/passengers/:id', component: PassengerProfileComponent },
       { path: 'admin/staff', component: StaffListComponent },
       { path: 'admin/flights', component: FlightsAdminComponent },
+      { path: 'admin/aircraft', component: AircraftAdminComponent },
       { path: 'account', component: MyAccountComponent }]
 
   },

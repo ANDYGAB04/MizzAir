@@ -14,18 +14,18 @@ namespace API.Controllers
             var aircraft = await aircraftService.GetAircraft();
             return Ok(aircraft);
         }
-        
+
         [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<AircraftDto>> GetAircraftById(int id)
         {
             var aircraft = await aircraftService.GetAircraftById(id);
-            
+
             if (aircraft == null)
             {
                 return NotFound();
             }
-            
+
             return Ok(aircraft);
         }
 
@@ -44,6 +44,20 @@ namespace API.Controllers
         }
 
         [Authorize(Policy = "RequireAdminRole")]
+        [HttpPut("{id}")]
+        public async Task<ActionResult<AircraftDto>> UpdateAircraft(int id, [FromBody] UpdateAircraftDto dto)
+        {
+            var result = await aircraftService.UpdateAircraftAsync(id, dto);
+
+            if (!result.Succeeded)
+            {
+                return BadRequest(result.Errors);
+            }
+
+            return Ok(result.Aircraft);
+        }
+
+        [Authorize(Policy = "RequireAdminRole")]
         [HttpDelete("{id}")]
         public async Task<ActionResult<DeleteAircraftResultDto>> DeleteAircraft(int id)
         {
@@ -51,12 +65,12 @@ namespace API.Controllers
 
             if (result == null)
             {
-                return NotFound($"Aircraft with ID {id} not found");
+                return NotFound();
             }
 
             if (!result.Succeeded)
             {
-                return BadRequest(result.Errors);
+                return BadRequest(result);
             }
 
             return Ok(result);
