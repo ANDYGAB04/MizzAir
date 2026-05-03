@@ -38,6 +38,10 @@
             <span class="info-value">{{ authService.currentUser()?.email }}</span>
           </div>
           <div class="info-item">
+            <span class="info-label">Phone Number</span>
+            <span class="info-value">{{ authService.currentUser()?.phoneNumber }}</span>
+          </div>
+          <div class="info-item">
             <span class="info-label">City</span>
             <span class="info-value">{{ authService.currentUser()?.city }}</span>
           </div>
@@ -61,6 +65,20 @@
         </div>
 
         <form [formGroup]="accountForm" (ngSubmit)="saveChanges()" class="account-form">
+          <div class="form-group">
+            <label for="phoneNumber" class="form-label">Phone Number</label>
+            <input
+              id="phoneNumber"
+              type="tel"
+              class="form-control"
+              formControlName="phoneNumber"
+              placeholder="Enter your phone number (10+ digits)"
+              [class.is-invalid]="accountForm.get('phoneNumber')?.invalid && accountForm.get('phoneNumber')?.touched" />
+            <div class="invalid-feedback" *ngIf="accountForm.get('phoneNumber')?.invalid && accountForm.get('phoneNumber')?.touched">
+              <span *ngIf="accountForm.get('phoneNumber')?.errors?.['pattern']">Phone number must contain at least 10 digits.</span>
+            </div>
+          </div>
+
           <div class="form-grid">
             <div class="form-group">
               <label for="city" class="form-label">City</label>

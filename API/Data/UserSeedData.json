@@ -4,6 +4,7 @@
         "email": "john@example.com",
         "firstName": "John",
         "lastName": "Doe",
+        "phoneNumber": "2125551234",
         "city": "New York",
         "country": "USA",
         "address": "123 Main Street, New York, NY 10001"
@@ -13,6 +14,7 @@
         "email": "jane@example.com",
         "firstName": "Jane",
         "lastName": "Smith",
+        "phoneNumber": "3105559876",
         "city": "Los Angeles",
         "country": "USA",
         "address": "456 Oak Avenue, Los Angeles, CA 90001"
@@ -22,6 +24,7 @@
         "email": "michael@example.com",
         "firstName": "Michael",
         "lastName": "Johnson",
+        "phoneNumber": "3125554321",
         "city": "Chicago",
         "country": "USA",
         "address": "789 Pine Road, Chicago, IL 60601"
@@ -31,6 +34,7 @@
         "email": "sarah@example.com",
         "firstName": "Sarah",
         "lastName": "Williams",
+        "phoneNumber": "7135558765",
         "city": "Houston",
         "country": "USA",
         "address": "321 Elm Street, Houston, TX 77001"
@@ -40,6 +44,7 @@
         "email": "robert@example.com",
         "firstName": "Robert",
         "lastName": "Brown",
+        "phoneNumber": "6025552109",
         "city": "Phoenix",
         "country": "USA",
         "address": "654 Maple Drive, Phoenix, AZ 85001"

@@ -8,12 +8,15 @@ public class RegisterDto
     [Required]
     public string Email { get; set; } = string.Empty;
 
+    [Required]
+    [RegularExpression(@"^\d{10,}$", ErrorMessage = "Phone number must contain at least 10 digits")]
+    public string PhoneNumber { get; set; } = string.Empty;
+
     [Required] public string? LastName { get; set; }
     [Required] public string? FirstName { get; set; }
     [Required] public string? City { get; set; }
     [Required] public string? Country { get; set; }
     [Required] public string? Address { get; set; }
-
 
     [Required]
     [StringLength(8, MinimumLength = 4)]

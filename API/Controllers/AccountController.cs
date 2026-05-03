@@ -48,6 +48,7 @@ public class AccountController(UserManager<User> userManager, ITokenService toke
             Token = await tokenService.CreateToken(user),
             FirstName = user.FirstName,
             Email = user.Email,
+            PhoneNumber = user.PhoneNumber ?? string.Empty,
             City = user.City,
             Country = user.Country,
             Address = user.Address
@@ -70,13 +71,13 @@ public class AccountController(UserManager<User> userManager, ITokenService toke
             return Unauthorized("Invalid Password");
         }
 
-        if (user.IsDeleted) return Unauthorized("Account deleted");
         return new UserDto
         {
             Lastname = user.LastName,
             Token = await tokenService.CreateToken(user),
             FirstName = user.FirstName,
             Email = user.Email,
+            PhoneNumber = user.PhoneNumber ?? string.Empty,
             City = user.City,
             Country = user.Country,
             Address = user.Address

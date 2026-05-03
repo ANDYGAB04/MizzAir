@@ -42,6 +42,7 @@ export class MyAccountComponent implements OnInit {
 
   initializeForm(): void {
     this.accountForm = this.fb.group({
+      phoneNumber: ['', [Validators.pattern(/^\d{10,}$/)]],
       city: ['', [Validators.minLength(2), Validators.maxLength(50)]],
       country: ['', [Validators.minLength(2), Validators.maxLength(50)]],
       address: ['', [Validators.minLength(5), Validators.maxLength(100)]],
@@ -142,6 +143,7 @@ export class MyAccountComponent implements OnInit {
     const user = this.authService.currentUser();
 
     this.accountForm.reset({
+      phoneNumber: user?.phoneNumber ?? '',
       city: user?.city ?? '',
       country: user?.country ?? '',
       address: user?.address ?? '',
@@ -155,11 +157,16 @@ export class MyAccountComponent implements OnInit {
     const formValue = this.accountForm.getRawValue();
     const payload: UpdateAccountPayload = {};
 
+    const phoneNumber = formValue.phoneNumber?.trim();
     const city = formValue.city?.trim();
     const country = formValue.country?.trim();
     const address = formValue.address?.trim();
     const currentPassword = formValue.currentPassword?.trim();
     const newPassword = formValue.newPassword?.trim();
+
+    if (phoneNumber !== user?.phoneNumber) {
+      payload.phoneNumber = phoneNumber;
+    }
 
     if (city !== user?.city || country !== user?.country || address !== user?.address) {
       payload.city = city;

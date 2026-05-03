@@ -32,6 +32,11 @@ public class AccountService(UserManager<User> userManager, ITokenService tokenSe
             };
         }
 
+        if (!string.IsNullOrWhiteSpace(updateAccountDto.PhoneNumber))
+        {
+            user.PhoneNumber = updateAccountDto.PhoneNumber.Trim();
+        }
+
         if (!string.IsNullOrWhiteSpace(updateAccountDto.City))
         {
             user.City = updateAccountDto.City.Trim();
@@ -143,6 +148,7 @@ public class AccountService(UserManager<User> userManager, ITokenService tokenSe
             FirstName = user.FirstName,
             Lastname = user.LastName,
             Email = user.Email!,
+            PhoneNumber = user.PhoneNumber ?? string.Empty,
             City = user.City,
             Country = user.Country,
             Address = user.Address,
