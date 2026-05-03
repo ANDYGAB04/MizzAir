@@ -1,0 +1,71 @@
+<div class="admin-page">
+    <section class="admin-header">
+        <div>
+            <h1>Broadcast Announcement</h1>
+            <p>Send notifications to all users in the system.</p>
+        </div>
+    </section>
+
+    <section class="admin-panel broadcast-panel">
+        <div class="broadcast-container">
+            <form [formGroup]="broadcastForm" (ngSubmit)="broadcast()">
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" formControlName="message" class="form-control message-textarea"
+                        placeholder="Enter your announcement message (minimum 5 characters, maximum 1000)"
+                        rows="6"></textarea>
+
+                    <div class="char-counter" [class.warning]="remainingChars < 100">
+                        {{ remainingChars }} characters remaining
+                    </div>
+
+                    <div class="validation-error" *ngIf="messageControl?.invalid && messageControl?.touched">
+                        <span *ngIf="messageControl?.errors?.['required']">Message is required</span>
+                        <span *ngIf="messageControl?.errors?.['minlength']">Message must be at least 5 characters</span>
+                        <span *ngIf="messageControl?.errors?.['maxlength']">Message cannot exceed 1000 characters</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="type">Announcement Type</label>
+                    <select id="type" formControlName="type" class="form-control">
+                        <option value="Announcement">Announcement</option>
+                        <option value="News">News</option>
+                        <option value="Alert">Alert</option>
+                        <option value="Maintenance">Maintenance</option>
+                        <option value="Promotion">Promotion</option>
+                    </select>
+
+                    <div class="validation-error" *ngIf="typeControl?.invalid && typeControl?.touched">
+                        Type is required
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" [disabled]="isSending() || broadcastForm.invalid">
+                        <span *ngIf="!isSending()">Send Announcement</span>
+                        <span *ngIf="isSending()">Sending...</span>
+                    </button>
+
+                    <button type="button" class="btn btn-secondary" (click)="resetForm()" [disabled]="isSending()">
+                        Clear
+                    </button>
+                </div>
+            </form>
+
+            <div class="success-box" *ngIf="notificationsCreated() !== null">
+                <div class="success-header">
+                    <span class="success-icon">✓</span>
+                    <h3>Announcement Sent Successfully</h3>
+                </div>
+                <p class="success-message">
+                    Your announcement was delivered to
+                    <strong>{{ notificationsCreated() }} user{{ notificationsCreated() === 1 ? '' : 's' }}</strong>
+                </p>
+                <p class="success-time" *ngIf="lastBroadcastTime()">
+                    Sent at: {{ lastBroadcastTime() }}
+                </p>
+            </div>
+        </div>
+    </section>
+</div>

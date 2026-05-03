@@ -12,6 +12,7 @@ import { MyAccountComponent } from './account/my-account.component';
 import { StaffListComponent } from './admin/staff/staff-list.component';
 import { FlightsAdminComponent } from './admin/flights/flights-admin.component';
 import { AircraftAdminComponent } from './admin/aircraft/aircraft-admin.component';
+import { BroadcastComponent } from './admin/broadcast/broadcast.component';
 import { authGuard } from './_guards/auth.guard';
 
 export const routes: Routes = [
@@ -32,6 +33,7 @@ export const routes: Routes = [
       { path: 'admin/staff', component: StaffListComponent },
       { path: 'admin/flights', component: FlightsAdminComponent },
       { path: 'admin/aircraft', component: AircraftAdminComponent },
+      { path: 'admin/broadcast', component: BroadcastComponent },
       { path: 'account', component: MyAccountComponent }]
 
   },

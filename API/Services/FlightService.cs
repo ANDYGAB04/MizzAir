@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Services;
 
-public class FlightService(DataContext context, IMapper mapper) : IFlightService
+public class FlightService(DataContext context, IMapper mapper, INotificationService notificationService) : IFlightService
 {
     private static readonly HashSet<string> AllowedStatuses = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -112,6 +112,9 @@ public class FlightService(DataContext context, IMapper mapper) : IFlightService
             return Failure(validationErrors);
         }
 
+        var oldStatus = flight.Status;
+        var statusChanged = !oldStatus.Equals(NormalizeStatus(dto.Status), StringComparison.OrdinalIgnoreCase);
+
         flight.DepartureTime = dto.DepartureTime;
         flight.ArrivalTime = dto.ArrivalTime;
         flight.Duration = CalculateDuration(dto.DepartureTime, dto.ArrivalTime);
@@ -123,6 +126,14 @@ public class FlightService(DataContext context, IMapper mapper) : IFlightService
         flight.ArrivalAirportId = dto.ArrivalAirportId;
 
         await context.SaveChangesAsync();
+
+        // Notify passengers if status changed
+        if (statusChanged)
+        {
+            var flightNumber = $"FLT-{id}";
+            var newStatus = flight.Status;
+            await notificationService.NotifyFlightStatusChange(id, flightNumber, newStatus);
+        }
 
         var updatedFlight = await GetFlightWithIncludes(id);
 
