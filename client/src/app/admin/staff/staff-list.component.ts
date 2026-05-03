@@ -16,7 +16,7 @@ import { CreateStaffAccountRequest, StaffAccount } from '../../../models/staff';
 @Component({
   selector: 'app-staff-list',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, RouterLinkActive],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './staff-list.component.html',
   styleUrl: './staff-list.component.css',
 })

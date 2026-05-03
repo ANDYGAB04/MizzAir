@@ -57,7 +57,16 @@ public class AccountController(UserManager<User> userManager, ITokenService toke
         var user = await userManager.Users
             .FirstOrDefaultAsync(x => x.Email == loginDto.Email.ToLower());
 
+
         if (user == null || user.Email == null) return Unauthorized("Invalid Email");
+
+        var pass = await userManager.CheckPasswordAsync(user, loginDto.Password);
+
+        if (pass is false)
+        {
+            return Unauthorized("Invalid Password");
+        }
+
         if (user.IsDeleted) return Unauthorized("Account deleted");
         return new UserDto
         {

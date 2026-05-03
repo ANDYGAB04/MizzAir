@@ -14,7 +14,7 @@ type SortField = 'fullname' | 'email' | 'phone';
 @Component({
   selector: 'app-passengers-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, RouterLinkActive],
+  imports: [CommonModule, FormsModule],
   templateUrl: './passengers-list.component.html',
   styleUrl: './passengers-list.component.css',
 })

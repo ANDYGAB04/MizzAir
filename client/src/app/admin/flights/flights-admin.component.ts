@@ -14,7 +14,7 @@ const FLIGHT_STATUSES = ['Scheduled', 'Active', 'Delayed', 'Cancelled', 'Complet
 @Component({
   selector: 'app-flights-admin',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, RouterLinkActive],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './flights-admin.component.html',
   styleUrl: './flights-admin.component.css',
 })
