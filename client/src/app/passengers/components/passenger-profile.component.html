@@ -76,9 +76,13 @@
                 </td>
                 <td>
                   <div class="route-main">
-                    <span>{{ booking.departureAirportName }}</span>
-                    <span class="route-arrow">-&gt;</span>
-                    <span>{{ booking.arrivalAirportName }}</span>
+                    <div class="airport-box">
+                      <span class="airport-name">{{ booking.departureAirportName }}</span>
+                    </div>
+                    <span class="route-arrow">→</span>
+                    <div class="airport-box">
+                      <span class="airport-name">{{ booking.arrivalAirportName }}</span>
+                    </div>
                   </div>
                 </td>
                 <td>{{ getSeatLabel(booking) }}</td>
@@ -93,4 +97,3 @@
     </ng-container>
   </section>
 </div>
-
