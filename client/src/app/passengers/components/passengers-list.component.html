@@ -4,24 +4,12 @@
     <p>Search and review passengers. Click a row for profile and booking history.</p>
   </section>
 
-  <nav class="admin-tabs" aria-label="Admin sections">
-    <a routerLink="/admin/passengers" routerLinkActive="active" class="tab-link">Passengers</a>
-    <a routerLink="/admin/staff" routerLinkActive="active" class="tab-link">Staff</a>
-    <a routerLink="/admin/flights" routerLinkActive="active" class="tab-link">Flights</a>
-  </nav>
-
   <section class="passengers-panel">
     <div class="search-row">
       <div class="search-group">
         <label for="search">Search</label>
-        <input
-          id="search"
-          type="text"
-          class="form-control"
-          placeholder="Name, email, or phone..."
-          [ngModel]="searchTerm()"
-          (ngModelChange)="searchTerm.set($event)"
-        />
+        <input id="search" type="text" class="form-control" placeholder="Name, email, or phone..."
+          [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" />
       </div>
 
       <div class="search-actions">
@@ -60,11 +48,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr
-            *ngFor="let p of passengers()"
-            class="clickable-row"
-            (click)="openPassenger(p.id)"
-          >
+          <tr *ngFor="let p of passengers()" class="clickable-row" (click)="openPassenger(p.id)">
             <td>{{ passengerFullName(p) }}</td>
             <td>{{ p.email }}</td>
             <td>{{ p.phoneNumber ?? '-' }}</td>

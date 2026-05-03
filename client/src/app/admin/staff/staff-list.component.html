@@ -8,12 +8,6 @@
     <button class="btn btn-primary" type="button" (click)="openAddModal()">Add Staff</button>
   </section>
 
-  <nav class="admin-tabs" aria-label="Admin sections">
-    <a routerLink="/admin/passengers" routerLinkActive="active" class="tab-link">Passengers</a>
-    <a routerLink="/admin/staff" routerLinkActive="active" class="tab-link">Staff</a>
-    <a routerLink="/admin/flights" routerLinkActive="active" class="tab-link">Flights</a>
-  </nav>
-
   <section class="admin-panel">
     <div class="panel-toolbar">
       <div>
@@ -70,7 +64,8 @@
 </div>
 
 <div class="modal-backdrop" *ngIf="isAddModalOpen()" (click)="closeAddModal()">
-  <section class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="addStaffTitle" (click)="$event.stopPropagation()">
+  <section class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="addStaffTitle"
+    (click)="$event.stopPropagation()">
     <div class="modal-header">
       <h2 id="addStaffTitle">Add Staff</h2>
       <button class="icon-button" type="button" aria-label="Close" (click)="closeAddModal()">&times;</button>
@@ -81,7 +76,8 @@
         <div class="form-group">
           <label for="firstName">First name</label>
           <input id="firstName" class="form-control" type="text" formControlName="firstName" />
-          <div class="invalid-feedback" *ngIf="staffForm.get('firstName')?.invalid && staffForm.get('firstName')?.touched">
+          <div class="invalid-feedback"
+            *ngIf="staffForm.get('firstName')?.invalid && staffForm.get('firstName')?.touched">
             First name is required.
           </div>
         </div>
@@ -89,7 +85,8 @@
         <div class="form-group">
           <label for="lastName">Last name</label>
           <input id="lastName" class="form-control" type="text" formControlName="lastName" />
-          <div class="invalid-feedback" *ngIf="staffForm.get('lastName')?.invalid && staffForm.get('lastName')?.touched">
+          <div class="invalid-feedback"
+            *ngIf="staffForm.get('lastName')?.invalid && staffForm.get('lastName')?.touched">
             Last name is required.
           </div>
         </div>
@@ -144,7 +141,8 @@
 </div>
 
 <div class="modal-backdrop" *ngIf="staffToDelete()" (click)="cancelDelete()">
-  <section class="confirm-panel" role="dialog" aria-modal="true" aria-labelledby="deleteStaffTitle" (click)="$event.stopPropagation()">
+  <section class="confirm-panel" role="dialog" aria-modal="true" aria-labelledby="deleteStaffTitle"
+    (click)="$event.stopPropagation()">
     <h2 id="deleteStaffTitle">Delete staff account</h2>
     <p>
       Delete {{ fullName(staffToDelete()!) }}? The account will be disabled and hidden from this list.
