@@ -55,7 +55,8 @@
         <div *ngIf="registerForm.get('phoneNumber')?.invalid && registerForm.get('phoneNumber')?.touched"
           class="invalid-feedback">
           <span *ngIf="registerForm.get('phoneNumber')?.errors?.['required']">Phone number is required</span>
-          <span *ngIf="registerForm.get('phoneNumber')?.errors?.['pattern']">Phone number must contain at least 10 digits</span>
+          <span *ngIf="registerForm.get('phoneNumber')?.errors?.['pattern']">Phone number must contain at least 10
+            digits</span>
         </div>
       </div>
 

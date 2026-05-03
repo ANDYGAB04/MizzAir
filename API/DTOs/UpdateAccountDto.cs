@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace API.DTOs;
 
-public class UpdateAccountDto 
+public class UpdateAccountDto
 {
     [RegularExpression(@"^\d{10,}$", ErrorMessage = "Phone number must contain at least 10 digits")]
     public string? PhoneNumber { get; set; }
@@ -21,5 +21,5 @@ public class UpdateAccountDto
     [StringLength(8, MinimumLength = 4)]
     public string? NewPassword { get; set; }
 
-    
+
 }

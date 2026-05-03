@@ -67,29 +67,23 @@
         <form [formGroup]="accountForm" (ngSubmit)="saveChanges()" class="account-form">
           <div class="form-group">
             <label for="phoneNumber" class="form-label">Phone Number</label>
-            <input
-              id="phoneNumber"
-              type="tel"
-              class="form-control"
-              formControlName="phoneNumber"
+            <input id="phoneNumber" type="tel" class="form-control" formControlName="phoneNumber"
               placeholder="Enter your phone number (10+ digits)"
               [class.is-invalid]="accountForm.get('phoneNumber')?.invalid && accountForm.get('phoneNumber')?.touched" />
-            <div class="invalid-feedback" *ngIf="accountForm.get('phoneNumber')?.invalid && accountForm.get('phoneNumber')?.touched">
-              <span *ngIf="accountForm.get('phoneNumber')?.errors?.['pattern']">Phone number must contain at least 10 digits.</span>
+            <div class="invalid-feedback"
+              *ngIf="accountForm.get('phoneNumber')?.invalid && accountForm.get('phoneNumber')?.touched">
+              <span *ngIf="accountForm.get('phoneNumber')?.errors?.['pattern']">Phone number must contain at least 10
+                digits.</span>
             </div>
           </div>
 
           <div class="form-grid">
             <div class="form-group">
               <label for="city" class="form-label">City</label>
-              <input
-                id="city"
-                type="text"
-                class="form-control"
-                formControlName="city"
-                placeholder="Enter your city"
+              <input id="city" type="text" class="form-control" formControlName="city" placeholder="Enter your city"
                 [class.is-invalid]="accountForm.get('city')?.invalid && accountForm.get('city')?.touched" />
-              <div class="invalid-feedback" *ngIf="accountForm.get('city')?.invalid && accountForm.get('city')?.touched">
+              <div class="invalid-feedback"
+                *ngIf="accountForm.get('city')?.invalid && accountForm.get('city')?.touched">
                 <span *ngIf="accountForm.get('city')?.errors?.['minlength']">City must be at least 2 characters.</span>
                 <span *ngIf="accountForm.get('city')?.errors?.['maxlength']">City cannot exceed 50 characters.</span>
               </div>
@@ -97,32 +91,30 @@
 
             <div class="form-group">
               <label for="country" class="form-label">Country</label>
-              <input
-                id="country"
-                type="text"
-                class="form-control"
-                formControlName="country"
+              <input id="country" type="text" class="form-control" formControlName="country"
                 placeholder="Enter your country"
                 [class.is-invalid]="accountForm.get('country')?.invalid && accountForm.get('country')?.touched" />
-              <div class="invalid-feedback" *ngIf="accountForm.get('country')?.invalid && accountForm.get('country')?.touched">
-                <span *ngIf="accountForm.get('country')?.errors?.['minlength']">Country must be at least 2 characters.</span>
-                <span *ngIf="accountForm.get('country')?.errors?.['maxlength']">Country cannot exceed 50 characters.</span>
+              <div class="invalid-feedback"
+                *ngIf="accountForm.get('country')?.invalid && accountForm.get('country')?.touched">
+                <span *ngIf="accountForm.get('country')?.errors?.['minlength']">Country must be at least 2
+                  characters.</span>
+                <span *ngIf="accountForm.get('country')?.errors?.['maxlength']">Country cannot exceed 50
+                  characters.</span>
               </div>
             </div>
           </div>
 
           <div class="form-group">
             <label for="address" class="form-label">Address</label>
-            <input
-              id="address"
-              type="text"
-              class="form-control"
-              formControlName="address"
+            <input id="address" type="text" class="form-control" formControlName="address"
               placeholder="Enter your address"
               [class.is-invalid]="accountForm.get('address')?.invalid && accountForm.get('address')?.touched" />
-            <div class="invalid-feedback" *ngIf="accountForm.get('address')?.invalid && accountForm.get('address')?.touched">
-              <span *ngIf="accountForm.get('address')?.errors?.['minlength']">Address must be at least 5 characters.</span>
-              <span *ngIf="accountForm.get('address')?.errors?.['maxlength']">Address cannot exceed 100 characters.</span>
+            <div class="invalid-feedback"
+              *ngIf="accountForm.get('address')?.invalid && accountForm.get('address')?.touched">
+              <span *ngIf="accountForm.get('address')?.errors?.['minlength']">Address must be at least 5
+                characters.</span>
+              <span *ngIf="accountForm.get('address')?.errors?.['maxlength']">Address cannot exceed 100
+                characters.</span>
             </div>
           </div>
 
@@ -134,31 +126,29 @@
           <div class="form-grid">
             <div class="form-group">
               <label for="currentPassword" class="form-label">Current Password</label>
-              <input
-                id="currentPassword"
-                type="password"
-                class="form-control"
-                formControlName="currentPassword"
+              <input id="currentPassword" type="password" class="form-control" formControlName="currentPassword"
                 placeholder="Enter current password"
                 [class.is-invalid]="accountForm.get('currentPassword')?.invalid && accountForm.get('currentPassword')?.touched" />
-              <div class="invalid-feedback" *ngIf="accountForm.get('currentPassword')?.invalid && accountForm.get('currentPassword')?.touched">
-                <span *ngIf="accountForm.get('currentPassword')?.errors?.['minlength']">Password must be at least 4 characters.</span>
-                <span *ngIf="accountForm.get('currentPassword')?.errors?.['maxlength']">Password cannot exceed 8 characters.</span>
+              <div class="invalid-feedback"
+                *ngIf="accountForm.get('currentPassword')?.invalid && accountForm.get('currentPassword')?.touched">
+                <span *ngIf="accountForm.get('currentPassword')?.errors?.['minlength']">Password must be at least 4
+                  characters.</span>
+                <span *ngIf="accountForm.get('currentPassword')?.errors?.['maxlength']">Password cannot exceed 8
+                  characters.</span>
               </div>
             </div>
 
             <div class="form-group">
               <label for="newPassword" class="form-label">New Password</label>
-              <input
-                id="newPassword"
-                type="password"
-                class="form-control"
-                formControlName="newPassword"
+              <input id="newPassword" type="password" class="form-control" formControlName="newPassword"
                 placeholder="Enter new password"
                 [class.is-invalid]="accountForm.get('newPassword')?.invalid && accountForm.get('newPassword')?.touched" />
-              <div class="invalid-feedback" *ngIf="accountForm.get('newPassword')?.invalid && accountForm.get('newPassword')?.touched">
-                <span *ngIf="accountForm.get('newPassword')?.errors?.['minlength']">Password must be at least 4 characters.</span>
-                <span *ngIf="accountForm.get('newPassword')?.errors?.['maxlength']">Password cannot exceed 8 characters.</span>
+              <div class="invalid-feedback"
+                *ngIf="accountForm.get('newPassword')?.invalid && accountForm.get('newPassword')?.touched">
+                <span *ngIf="accountForm.get('newPassword')?.errors?.['minlength']">Password must be at least 4
+                  characters.</span>
+                <span *ngIf="accountForm.get('newPassword')?.errors?.['maxlength']">Password cannot exceed 8
+                  characters.</span>
               </div>
             </div>
           </div>
