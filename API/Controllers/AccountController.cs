@@ -39,6 +39,9 @@ public class AccountController(UserManager<User> userManager, ITokenService toke
             return BadRequest(result.Errors);
         }
 
+        // Assign Passenger role to new user
+        await userManager.AddToRoleAsync(user, "Passenger");
+
         return new UserDto
         {
             Lastname = user.LastName,

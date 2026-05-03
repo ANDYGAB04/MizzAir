@@ -13,7 +13,8 @@ namespace API.Controllers;
 public class AdminController(
     UserManager<User> userManager,
     INotificationService notificationService,
-    IStaffService staffService) : BaseApiController
+    IStaffService staffService,
+    IPassengerService passengerService) : BaseApiController
 {
     [Authorize(Policy = "RequireAdminRole")]
     [HttpGet("users-with-roles")]
@@ -91,5 +92,24 @@ public class AdminController(
         }
 
         return Ok(result);
+    }
+
+    [Authorize(Policy = "RequireAdminRole")]
+    [HttpDelete("passengers/{id}")]
+    public async Task<ActionResult<DeletePassengerResultDto>> DeletePassenger(int id)
+    {
+        try
+        {
+            var result = await passengerService.DeletePassengerAsync(id);
+            return Ok(result);
+        }
+        catch (NullReferenceException)
+        {
+            return NotFound($"Passenger account with ID {id} not found");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = "Failed to delete passenger account", error = ex.Message });
+        }
     }
 }

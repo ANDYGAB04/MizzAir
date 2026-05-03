@@ -34,5 +34,9 @@ export class PassengerService {
   getPassengerHistory(passengerId: number): Observable<Booking[]> {
     return this.http.get<Booking[]>(this.baseUrl + `passenger/${passengerId}/history`);
   }
+
+  deletePassenger(passengerId: number): Observable<any> {
+    return this.http.delete<any>(this.baseUrl + `admin/passengers/${passengerId}`);
+  }
 }
 

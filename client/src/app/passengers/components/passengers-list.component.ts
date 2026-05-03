@@ -120,4 +120,29 @@ export class PassengersListComponent {
   passengerFullName(p: Passenger): string {
     return `${p.firstName} ${p.lastName}`.trim();
   }
+
+  isAdmin(): boolean {
+    return this.authService.hasAdmin();
+  }
+
+  deletePassenger(passengerId: number, passengerName: string, event: Event): void {
+    event.stopPropagation();
+
+    const confirmed = confirm(
+      `Are you sure you want to delete passenger "${passengerName}"? This action cannot be undone.`
+    );
+
+    if (!confirmed) return;
+
+    this.passengerService.deletePassenger(passengerId).subscribe({
+      next: (result) => {
+        this.toastr.success('Passenger account deleted successfully');
+        this.loadPassengers();
+      },
+      error: (error) => {
+        const errorMessage = error.error?.message || 'Failed to delete passenger account';
+        this.toastr.error(errorMessage);
+      },
+    });
+  }
 }

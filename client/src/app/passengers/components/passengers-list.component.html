@@ -45,6 +45,7 @@
             <th class="sortable" (click)="setSort('phone')">
               Phone <span class="sort-indicator">{{ getSortIndicator('phone') }}</span>
             </th>
+            <th *ngIf="isAdmin()">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -52,6 +53,12 @@
             <td>{{ passengerFullName(p) }}</td>
             <td>{{ p.email }}</td>
             <td>{{ p.phoneNumber ?? '-' }}</td>
+            <td *ngIf="isAdmin()" class="actions-cell">
+              <button class="btn btn-danger btn-sm" type="button"
+                (click)="deletePassenger(p.id, passengerFullName(p), $event)" title="Delete this passenger account">
+                Delete
+              </button>
+            </td>
           </tr>
         </tbody>
       </table>
