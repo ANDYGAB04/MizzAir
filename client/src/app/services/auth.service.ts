@@ -3,12 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { User } from '../../models/user';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private http = inject(HttpClient);
+  private router = inject(Router);
   baseUrl = environment.apiUrl;
   currentUser = signal<User | null>(this.getUserFromStorage());
 
@@ -104,5 +106,6 @@ export class AuthService {
   logout() {
     localStorage.removeItem('user');
     this.currentUser.set(null);
+    this.router.navigateByUrl("/");
   }
 }
