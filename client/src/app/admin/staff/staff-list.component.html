@@ -46,7 +46,6 @@
           <tr *ngFor="let member of staff()">
             <td>
               <div class="primary-text">{{ fullName(member) }}</div>
-              <div class="secondary-text">ID {{ member.id }}</div>
             </td>
             <td>{{ member.email }}</td>
             <td>{{ member.city || '-' }}{{ member.country ? ', ' + member.country : '' }}</td>
