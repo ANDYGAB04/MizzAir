@@ -20,8 +20,6 @@ public class PassengerService(DataContext _context, UserManager<User> _userManag
             .AsQueryable();
 
 
-
-
         // Apply search filter (by name or email)
         if (!string.IsNullOrWhiteSpace(filterDto.SearchTerm))
         {
