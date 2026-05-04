@@ -33,9 +33,13 @@
           <tr *ngFor="let booking of bookings()">
             <td class="route-cell">
               <div class="route-main">
-                <span>{{ booking.departureAirportName }}</span>
-                <span class="route-arrow">-&gt;</span>
-                <span>{{ booking.arrivalAirportName }}</span>
+                <div class="airport-box">
+                  <span class="airport-name">{{ booking.departureAirportName }}</span>
+                </div>
+                <span class="route-arrow">→</span>
+                <div class="airport-box">
+                  <span class="airport-name">{{ booking.arrivalAirportName }}</span>
+                </div>
               </div>
               <span class="booking-reference">{{ booking.bookingReference }}</span>
             </td>
@@ -49,10 +53,7 @@
             <td>{{ getSeatLabel(booking) }}</td>
             <td class="price-cell">{{ booking.totalPrice | number:'1.2-2' }} EUR</td>
             <td class="actions-column">
-              <button
-                type="button"
-                class="btn btn-danger"
-                [disabled]="deletingBookingId() === booking.id"
+              <button type="button" class="btn btn-danger" [disabled]="deletingBookingId() === booking.id"
                 (click)="deleteBooking(booking.id)">
                 {{ deletingBookingId() === booking.id ? 'Deleting...' : 'Delete' }}
               </button>
