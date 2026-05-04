@@ -49,7 +49,7 @@
           <tr *ngFor="let flight of flights()">
             <td>
               <div class="primary-text">{{ routeLabel(flight) }}</div>
-              <div class="secondary-text">ID {{ flight.id }} · {{ flight.duration }} min</div>
+              <div class="secondary-text">{{ flight.duration }} min</div>
             </td>
             <td>{{ flight.departureTime | date : 'dd MMM yyyy, HH:mm' }}</td>
             <td>{{ flight.arrivalTime | date : 'dd MMM yyyy, HH:mm' }}</td>
@@ -57,9 +57,11 @@
             <td><span class="status-badge">{{ flight.status }}</span></td>
             <td>{{ flight.availableSeats }}</td>
             <td>{{ flight.price | currency }}</td>
-            <td class="actions-cell">
-              <button class="btn btn-secondary btn-sm" type="button" (click)="openEditModal(flight)">Edit</button>
-              <button class="btn btn-danger btn-sm" type="button" (click)="requestDelete(flight)">Delete</button>
+            <td class="actions">
+              <button class="btn btn-sm btn-warning edit-btn" type="button" (click)="openEditModal(flight)"
+                [disabled]="isSaving()">Edit</button>
+              <button class="btn btn-sm btn-danger delete-btn" type="button" (click)="requestDelete(flight)"
+                [disabled]="isDeleting()">Delete</button>
             </td>
           </tr>
         </tbody>
@@ -69,7 +71,8 @@
 </div>
 
 <div class="modal-backdrop" *ngIf="isModalOpen()" (click)="closeModal()">
-  <section class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="flightModalTitle" (click)="$event.stopPropagation()">
+  <section class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="flightModalTitle"
+    (click)="$event.stopPropagation()">
     <div class="modal-header">
       <h2 id="flightModalTitle">{{ modalTitle() }}</h2>
       <button class="icon-button" type="button" aria-label="Close" (click)="closeModal()">&times;</button>
@@ -158,7 +161,8 @@
 </div>
 
 <div class="modal-backdrop" *ngIf="flightToDelete()" (click)="cancelDelete()">
-  <section class="confirm-panel" role="dialog" aria-modal="true" aria-labelledby="deleteFlightTitle" (click)="$event.stopPropagation()">
+  <section class="confirm-panel" role="dialog" aria-modal="true" aria-labelledby="deleteFlightTitle"
+    (click)="$event.stopPropagation()">
     <h2 id="deleteFlightTitle">Delete flight</h2>
     <p>
       Delete flight {{ flightToDelete()?.id }} from {{ flightToDelete()?.departureAirportName }} to
