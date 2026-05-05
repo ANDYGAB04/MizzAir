@@ -151,7 +151,14 @@ public class Seed
         {
             new() { Name = "John F. Kennedy International Airport", City = "New York", Country = "USA", IATACode = "JFK" },
             new() { Name = "Los Angeles International Airport", City = "Los Angeles", Country = "USA", IATACode = "LAX" },
-            new() { Name = "Chicago O'Hare International Airport", City = "Chicago", Country = "USA", IATACode = "ORD" }
+            new() { Name = "Chicago O'Hare International Airport", City = "Chicago", Country = "USA", IATACode = "ORD" },
+            new() { Name = "Miami International Airport", City = "Miami", Country = "USA", IATACode = "MIA" },
+            new() { Name = "Hartsfield-Jackson Atlanta International Airport", City = "Atlanta", Country = "USA", IATACode = "ATL" },
+            new() { Name = "Dallas/Fort Worth International Airport", City = "Dallas", Country = "USA", IATACode = "DFW" },
+            new() { Name = "Henri Coandă International Airport", City = "Bucharest", Country = "Romania", IATACode = "OTP" },
+            new() { Name = "London Heathrow Airport", City = "London", Country = "United Kingdom", IATACode = "LHR" },
+            new() { Name = "Charles de Gaulle Airport", City = "Paris", Country = "France", IATACode = "CDG" },
+            new() { Name = "Narita International Airport", City = "Tokyo", Country = "Japan", IATACode = "NRT" }
         };
 
         foreach (var airport in airports)
